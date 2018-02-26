@@ -1,0 +1,11 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    environment:
+      - GITHUB_TOKEN
+      - SYMFONY_ENV=dev
+      - START_CRON=true
+    volumes:
+      - .:/app
