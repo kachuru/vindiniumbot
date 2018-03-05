@@ -2,18 +2,16 @@
 
 namespace Kachuru\Vindinium\Game\Tile;
 
-use Kachuru\Vindinium\Game\Position;
-
 class TileFactory
 {
     const TILE_TYPES = [
         'EmptyTile', 'WallTile', 'MineTile', 'TavernTile', 'PlayerTile'
     ];
 
-    public function buildTile(Position $position, string $content): Tile
+    public function buildTile(string $content): Tile
     {
         return new Tile(
-            $this->getTileTypeFromContent($content), $position, $content
+            $this->getTileTypeFromContent($content), $content
         );
     }
 

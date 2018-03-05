@@ -2,7 +2,6 @@
 
 namespace spec\Kachuru\Vindinium\Game\Tile;
 
-use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\PlayerTile;
@@ -22,28 +21,28 @@ class TileFactorySpec extends ObjectBehavior
 {
     function it_returns_the_right_type()
     {
-        $this->checkReturnType(new EmptyTile(), new Position(0, 0), '  ');
+        $this->checkReturnType(new EmptyTile(), '  ');
 
-        $this->checkReturnType(new WallTile(), new Position(0, 1), '##');
+        $this->checkReturnType(new WallTile(), '##');
 
-        $this->checkReturnType(new MineTile(), new Position(1, 1), '$-');
-        $this->checkReturnType(new MineTile(), new Position(4, 3), '$1');
-        $this->checkReturnType(new MineTile(), new Position(3, 4), '$2');
-        $this->checkReturnType(new MineTile(), new Position(6, 7), '$3');
-        $this->checkReturnType(new MineTile(), new Position(7, 6), '$4');
+        $this->checkReturnType(new MineTile(), '$-');
+        $this->checkReturnType(new MineTile(), '$1');
+        $this->checkReturnType(new MineTile(), '$2');
+        $this->checkReturnType(new MineTile(), '$3');
+        $this->checkReturnType(new MineTile(), '$4');
 
-        $this->checkReturnType(new PlayerTile(), new Position(1, 0), '@1');
-        $this->checkReturnType(new PlayerTile(), new Position(7, 7), '@2');
-        $this->checkReturnType(new PlayerTile(), new Position(2, 3), '@3');
-        $this->checkReturnType(new PlayerTile(), new Position(6, 3), '@4');
+        $this->checkReturnType(new PlayerTile(), '@1');
+        $this->checkReturnType(new PlayerTile(), '@2');
+        $this->checkReturnType(new PlayerTile(), '@3');
+        $this->checkReturnType(new PlayerTile(), '@4');
 
-        $this->checkReturnType(new TavernTile(), new Position(4, 4), '[]');
+        $this->checkReturnType(new TavernTile(), '[]');
     }
 
-    private function checkReturnType(TileType $type, Position $position, $content)
+    private function checkReturnType(TileType $type, $content)
     {
-        $this->buildTile($position, $content)->shouldBeLike(
-            new Tile($type, $position, $content)
+        $this->buildTile($content)->shouldBeLike(
+            new Tile($type, $content)
         );
     }
 }
