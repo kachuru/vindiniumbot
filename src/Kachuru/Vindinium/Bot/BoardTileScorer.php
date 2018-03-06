@@ -6,13 +6,7 @@ use Kachuru\Vindinium\Game\BoardTile;
 
 class BoardTileScorer
 {
-    /**
-     * @var BoardTile
-     */
     private $origin;
-    /**
-     * @var BoardTile
-     */
     private $destination;
 
     public function __construct(BoardTile $origin, BoardTile $destination)
@@ -21,12 +15,13 @@ class BoardTileScorer
         $this->destination = $destination;
     }
 
-    public function scoreBoardTile(BoardTile $boardTile, ScoredBoardTile $parent = null)
+    public function scoreBoardTile(BoardTile $boardTile, ScoredBoardTile $parent = null): ScoredBoardTile
     {
         $moveCost = 1;
         if (!is_null($parent)) {
             $moveCost += $parent->getMoveCost();
         }
+
         return new ScoredBoardTile(
             $boardTile,
             new BoardTileScore($moveCost, $this->estimateCostToDestination($boardTile)),
