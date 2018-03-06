@@ -39,12 +39,14 @@ class Board
         );
     }
 
-    public function getBoardTileAtPosition(Position $position): BoardTile
+    public function getBoardTileAtPosition(Position $position): ?BoardTile
     {
         if (array_key_exists($position->getY(), $this->tiles)
             && array_key_exists($position->getX(), $this->tiles[$position->getY()])) {
             return new BoardTile($this->tiles[$position->getY()][$position->getX()], $position);
         }
+
+        return null;
     }
 
     public function getAdjacentBoardTiles(Position $position): array

@@ -61,6 +61,21 @@ class BoardSpec extends ObjectBehavior
                 new BoardTile(new Tile(new EmptyTile, '  '), new Position(1, 3)),
             ]
         );
+
+        $this->getAdjacentBoardTiles(new Position(4, 2))->shouldBeLike(
+            [
+                new BoardTile(new Tile(new EmptyTile, '  '), new Position(4, 1)),
+                new BoardTile(new Tile(new WallTile, '##'), new Position(3, 2)),
+                new BoardTile(new Tile(new EmptyTile, '  '), new Position(4, 3)),
+            ]
+        );
+
+        $this->getAdjacentBoardTiles(new Position(4, 4))->shouldBeLike(
+            [
+                new BoardTile(new Tile(new EmptyTile, '  '), new Position(4, 3)),
+                new BoardTile(new Tile(new EmptyTile, '  '), new Position(3, 4)),
+            ]
+        );
     }
 
     private function getSimpleTestBoard()
