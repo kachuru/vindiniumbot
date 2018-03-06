@@ -3,7 +3,7 @@
 namespace spec\Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Bot\BoardTileScore;
-use Kachuru\Vindinium\Bot\BoardTileScorer;
+use Kachuru\Vindinium\Bot\PathEndPoints;
 use Kachuru\Vindinium\Bot\ScoredBoardTile;
 use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Position;
@@ -14,10 +14,10 @@ use Prophecy\Argument;
 
 /**
  * Class BoardTileScorerSpec
- * @mixin BoardTileScorer
+ * @mixin PathEndPoints
  * @package spec\Kachuru\Vindinium\Bot
  */
-class BoardTileScorerSpec extends ObjectBehavior
+class PathEndPointsSpec extends ObjectBehavior
 {
     public function let()
     {

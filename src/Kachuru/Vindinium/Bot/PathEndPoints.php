@@ -4,7 +4,7 @@ namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\BoardTile;
 
-class BoardTileScorer
+class PathEndPoints
 {
     private $origin;
     private $destination;
@@ -17,14 +17,12 @@ class BoardTileScorer
 
     public function scoreBoardTile(BoardTile $boardTile, ScoredBoardTile $parent = null): ScoredBoardTile
     {
-        $moveCost = 1;
-        if (!is_null($parent)) {
-            $moveCost += $parent->getMoveCost();
-        }
-
         return new ScoredBoardTile(
             $boardTile,
-            new BoardTileScore($moveCost, $this->estimateCostToDestination($boardTile)),
+            new BoardTileScore(
+                is_null($parent) ? 1 : $parent->getMoveCost() + 1,
+                $this->estimateCostToDestination($boardTile)
+            ),
             $parent
         );
     }
