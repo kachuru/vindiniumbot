@@ -31,6 +31,11 @@ class ScoredBoardTile
         return $this->boardTileScore->getMoveCost();
     }
 
+    public function getScore(): int
+    {
+        return $this->boardTileScore->getScore();
+    }
+
     public function getParent(): ScoredBoardTile
     {
         return $this->parent;
