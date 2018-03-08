@@ -3,6 +3,7 @@
 namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Position;
 
 class ScoredBoardTile
 {
@@ -26,6 +27,16 @@ class ScoredBoardTile
         $this->parent = $parent;
     }
 
+    public function getParent(): ScoredBoardTile
+    {
+        return $this->parent;
+    }
+
+    public function getPosition(): Position
+    {
+        return $this->boardTile->getPosition();
+    }
+
     public function getMoveCost()
     {
         return $this->boardTileScore->getMoveCost();
@@ -36,9 +47,8 @@ class ScoredBoardTile
         return $this->boardTileScore->getScore();
     }
 
-    public function getParent(): ScoredBoardTile
+    public function isAtDestination(): bool
     {
-        return $this->parent;
+        return (bool) $this->boardTileScore->getDistanceToDestination() == 0;
     }
-
 }

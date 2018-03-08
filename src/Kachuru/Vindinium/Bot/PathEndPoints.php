@@ -15,19 +15,29 @@ class PathEndPoints
         $this->destination = $destination;
     }
 
+    public function getOrigin(): BoardTile
+    {
+        return $this->origin;
+    }
+
+    public function getDestination(): BoardTile
+    {
+        return $this->destination;
+    }
+
     public function scoreBoardTile(BoardTile $boardTile, ScoredBoardTile $parent = null): ScoredBoardTile
     {
         return new ScoredBoardTile(
             $boardTile,
             new BoardTileScore(
-                is_null($parent) ? 1 : $parent->getMoveCost() + 1,
+                is_null($parent) ? 0 : $parent->getMoveCost() + 1,
                 $this->estimateCostToDestination($boardTile)
             ),
             $parent
         );
     }
 
-    public function estimateCostToDestination(BoardTile $from): int
+    private function estimateCostToDestination(BoardTile $from): int
     {
         // LoD breakage
         return abs($from->getPosition()->getX() - $this->destination->getPosition()->getX())
