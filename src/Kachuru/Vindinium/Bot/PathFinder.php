@@ -53,7 +53,7 @@ class PathFinder
 
         } while (!$nextMove->isAtDestination());
 
-        return $closedList;
+        return array_merge($this->traceParents($closedList), [$nextMove]);
     }
 
     public function scoreTiles($tiles, ScoredBoardTile $parentTile = null): array
@@ -75,6 +75,24 @@ class PathFinder
                     $bestTile = $checkTile;
                 }
                 return $bestTile;
+            }
+        );
+    }
+
+    private function traceParents(array $closedList)
+    {
+        return array_reduce(
+            array_reverse($closedList),
+            function ($path, ScoredBoardTile $tile) {
+                if (is_null($path)) {
+                    $path = [];
+                }
+
+                if ($tile->hasParent() && !in_array($tile->getParent(), $path)) {
+                    array_unshift($path, $tile->getParent());
+                }
+
+                return $path;
             }
         );
     }

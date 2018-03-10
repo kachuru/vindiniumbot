@@ -51,4 +51,9 @@ class ScoredBoardTile
     {
         return (bool) $this->boardTileScore->getDistanceToDestination() == 0;
     }
+
+    public function hasParent()
+    {
+        return !is_null($this->parent);
+    }
 }

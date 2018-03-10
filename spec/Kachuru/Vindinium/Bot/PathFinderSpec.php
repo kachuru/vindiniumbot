@@ -190,6 +190,46 @@ class PathFinderSpec extends ObjectBehavior
         );
     }
 
+    function it_finds_the_path_with_a_dead_end()
+    {
+        /**
+         * Starting at 0,1 and moving to 4,3 should yield this path:
+         *   ..........
+         *   ..........
+         *   ..##......
+         *   ####..##..
+         *   ..........
+         */
+        $origin = new Position(0, 1);
+        $destination = new Position(4, 3);
+
+        $board = new Board(new TileFactory(), 5, $this->getBoardWithDeadEnd());
+        $this->beConstructedWith(
+            $board,
+            PathEndPoints::buildFromBoard($board, $origin, $destination)
+        );
+
+        $originTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 1)), [0, 6]);
+        $moveOne = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(1, 1)), [1, 5], $originTile);
+        $moveTwo = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 1)), [2, 4], $moveOne);
+        $moveThree = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 2)), [3, 3], $moveTwo);
+        $moveFour = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 2)), [4, 2], $moveThree);
+        $moveFive = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(4, 2)), [5, 1], $moveFour);
+        $destinationTile = $this->getScoredBoardTile($board->getBoardTileAtPosition($destination), [6, 0], $moveFive);
+
+        $this->find()->shouldBeLike(
+            [
+                $originTile,
+                $moveOne,
+                $moveTwo,
+                $moveThree,
+                $moveFour,
+                $moveFive,
+                $destinationTile
+            ]
+        );
+    }
+
 
 
     private function checkMove(Board $board, Position $currentPosition, array $expectScore, ScoredBoardTile $parentTile)
@@ -253,15 +293,15 @@ class PathFinderSpec extends ObjectBehavior
         /**
          * Starting at 0,1 and moving to 4,3 should yield this path:
          *   ..........
-         *   ..........
+         *   Or........
          *   ..##......
-         *   ####......
+         *   ####..##De
          *   ..........
          */
         return "          "
             . "          "
             . "  ##      "
-            . "####      "
+            . "####  ##  "
             . "          ";
     }
 }
