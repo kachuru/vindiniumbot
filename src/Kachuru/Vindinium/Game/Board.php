@@ -49,6 +49,9 @@ class Board
         return null;
     }
 
+    /**
+     * FIXME: This should take a BoardTile instead of a position
+     */
     public function getAdjacentBoardTiles(Position $position): array
     {
         $tiles = array_reduce(
@@ -58,7 +61,7 @@ class Board
                     new Position($position->getX() + $adj[0], $position->getY() + $adj[1])
                 );
 
-                if ($boardTile instanceof BoardTile) {
+                if ($boardTile instanceof BoardTile && $boardTile->isWalkable()) {
                     $positions[] = $boardTile;
                 }
 

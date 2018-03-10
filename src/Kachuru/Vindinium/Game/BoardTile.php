@@ -25,4 +25,8 @@ class BoardTile
         return $this->position;
     }
 
+    public function isWalkable(): bool
+    {
+        return $this->tile->isWalkable();
+    }
 }

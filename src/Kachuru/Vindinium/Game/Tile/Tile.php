@@ -18,6 +18,11 @@ class Tile
         return $this->type;
     }
 
+    public function isWalkable(): bool
+    {
+        return $this->type->isWalkable();
+    }
+
     public function __toString(): string
     {
         return $this->content;

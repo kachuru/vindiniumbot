@@ -49,7 +49,7 @@ class BoardSpec extends ObjectBehavior
         );
     }
 
-    public function it_returns_adjacent_tiles()
+    public function it_returns_walkable_adjacent_tiles()
     {
         $this->buildBoard($this->getSimpleTestBoard(), 5);
 
@@ -57,7 +57,6 @@ class BoardSpec extends ObjectBehavior
             [
                 new BoardTile(new Tile(new EmptyTile, '  '), new Position(1, 1)),
                 new BoardTile(new Tile(new EmptyTile, '  '), new Position(0, 2)),
-                new BoardTile(new Tile(new WallTile, '##'), new Position(2, 2)),
                 new BoardTile(new Tile(new EmptyTile, '  '), new Position(1, 3)),
             ]
         );
@@ -65,7 +64,6 @@ class BoardSpec extends ObjectBehavior
         $this->getAdjacentBoardTiles(new Position(4, 2))->shouldBeLike(
             [
                 new BoardTile(new Tile(new EmptyTile, '  '), new Position(4, 1)),
-                new BoardTile(new Tile(new WallTile, '##'), new Position(3, 2)),
                 new BoardTile(new Tile(new EmptyTile, '  '), new Position(4, 3)),
             ]
         );

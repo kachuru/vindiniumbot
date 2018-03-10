@@ -2,12 +2,19 @@
 
 namespace Kachuru\Vindinium\Bot;
 
+use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Position;
 
 class PathEndPoints
 {
     private $origin;
     private $destination;
+
+    public static function buildFromBoard(Board $board, Position $origin, Position $destination)
+    {
+        return new self($board->getBoardTileAtPosition($origin), $board->getBoardTileAtPosition($destination));
+    }
 
     public function __construct(BoardTile $origin, BoardTile $destination)
     {
@@ -37,7 +44,7 @@ class PathEndPoints
         );
     }
 
-    private function estimateCostToDestination(BoardTile $from): int
+    public function estimateCostToDestination(BoardTile $from): int
     {
         // LoD breakage
         return abs($from->getPosition()->getX() - $this->destination->getPosition()->getX())
