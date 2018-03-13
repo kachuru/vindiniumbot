@@ -1,9 +1,12 @@
 <?php
 
+use Kachuru\Vindinium\Game\Game;
+use Kachuru\Vindinium\Game\Tile\TileFactory;
+
 class Client
 {
-
     CONST TIMEOUT = 15;
+
     private $key;
     private $mode;
     private $numberOfGames;
@@ -46,6 +49,8 @@ class Client
 
     private function start($botObject)
     {
+        $tileFactory = new TileFactory();
+
         // Starts a game with all the required parameters
         if ($this->mode == 'arena') {
             echo "Connected and waiting for other players to join...\n";
@@ -53,42 +58,60 @@ class Client
 
         // Get the initial state
         $state = $this->getNewGameState();
-        echo "Playing at: " . $state['viewUrl'] . "\n";
+        echo "Playing at: " . $state['viewUrl'] . "\n\n";
+
+        $windowSize = $state['game']['board']['size'] + 2;
+
+        for ($i = 0; $i < $windowSize; $i++) {
+            echo PHP_EOL;
+        }
+
+        $game = Game::buildFromResponse($state, $tileFactory);
 
         ob_start();
-        while ($this->isFinished($state) === false) {
-            // Some nice output ;)
-            echo '.';
+        while (!$game->isFinished()) {
+
+            $this->cursorUp($windowSize);
+
+            $board = $game->getBoard();
+            print($board . PHP_EOL);
+
+            $player = $game->getPlayer();
+            print($player->print() . PHP_EOL);
             ob_flush();
 
             // Move to some direction
             $url = $state['playUrl'];
             $direction = $botObject->move($state);
             $state = $this->move($url, $direction);
+
+            $game = Game::buildFromResponse($state, $tileFactory);
         }
         ob_end_clean();
     }
 
     private function getNewGameState()
     {
+        $apiEndpoint = '/api/arena';
+        $params = [
+            'key' => $this->key
+        ];
+
         // Get a JSON from the server containing the current state of the game
         if ($this->mode == 'training') {
-            // Don't pass the 'map' parameter if you want a random map
-            $params = array('key' => $this->key, 'turns' => $this->numberOfTurns, 'map' => 'm1');
-            $api_endpoint = '/api/training';
-        } elseif ($this->mode == 'arena') {
-            $params = array('key' => $this->key);
-            $api_endpoint = '/api/arena';
+            $apiEndpoint = '/api/training';
+            $params['turns'] = $this->numberOfTurns;
+            $params['map'] = 'm1';
         }
 
         // Wait for 10 minutes
-        $r = HttpPost::post($this->serverUrl . $api_endpoint, $params, 10 * 60);
+        $response = HttpPost::post($this->serverUrl . $apiEndpoint, $params, 10 * 60);
 
-        if (isset($r['headers']['status_code']) && $r['headers']['status_code'] == 200) {
-            return json_decode($r['content'], true);
+        if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
+            return json_decode($response['content'], true);
         } else {
             echo "Error when creating the game\n";
-            echo $r['content'];
+            echo $response['content'];
         }
     }
 
@@ -100,11 +123,11 @@ class Client
          */
 
         try {
-            $r = HttpPost::post($url, array('dir' => $direction), self::TIMEOUT);
-            if (isset($r['headers']['status_code']) && $r['headers']['status_code'] == 200) {
-                return json_decode($r['content'], true);
+            $response = HttpPost::post($url, array('dir' => $direction), self::TIMEOUT);
+            if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
+                return json_decode($response['content'], true);
             } else {
-                echo "Error HTTP " . $r['headers']['status_code'] . "\n" . $r['content'] . "\n";
+                echo "Error HTTP " . $response['headers']['status_code'] . "\n" . $response['content'] . "\n";
                 return array('game' => array('finished' => true));
             }
         } catch (\Exception $e) {
@@ -113,8 +136,28 @@ class Client
         }
     }
 
-    private function isFinished($state)
+    function cursorUp($n = 1)
     {
-        return $state['game']['finished'];
+        $this->moveCursor($n, 'A');
+    }
+
+    function cursorDown($n = 1)
+    {
+        $this->moveCursor($n, 'B');
+    }
+
+    function cursorRight($n = 1)
+    {
+        $this->moveCursor($n, 'C');
+    }
+
+    function cursorLeft($n = 1)
+    {
+        $this->moveCursor($n, 'D');
+    }
+
+    function moveCursor($n, $d)
+    {
+        echo "\033[".$n.$d;
     }
 }

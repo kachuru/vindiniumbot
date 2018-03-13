@@ -6,7 +6,7 @@ use Kachuru\Vindinium\Game\Tile\TileFactory;
 
 class Board
 {
-    const REQUIRE_KEYS = ['board', 'size'];
+    const REQUIRE_KEYS = ['size', 'tiles'];
 
     private $size;
     private $tiles;
