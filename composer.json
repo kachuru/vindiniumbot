@@ -1,10 +1,14 @@
 {
-    "require-dev": {
-        "phpspec/phpspec": "^4.3"
-    },
     "autoload": {
         "psr-4": {
             "Kachuru\\": "src/Kachuru"
         }
+    },
+    "require": {
+        "symfony/event-dispatcher": "^4.0",
+        "guzzlehttp/guzzle": "^6.3"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^4.3"
     }
 }
