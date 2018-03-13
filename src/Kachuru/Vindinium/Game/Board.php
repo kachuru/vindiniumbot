@@ -61,7 +61,7 @@ class Board
                     new Position($position->getX() + $adj[0], $position->getY() + $adj[1])
                 );
 
-                if ($boardTile instanceof BoardTile && $boardTile->isWalkable()) {
+                if ($boardTile instanceof BoardTile) {
                     $positions[] = $boardTile;
                 }
 

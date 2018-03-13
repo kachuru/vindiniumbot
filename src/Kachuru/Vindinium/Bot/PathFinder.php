@@ -58,11 +58,16 @@ class PathFinder
 
     public function scoreTiles($tiles, ScoredBoardTile $parentTile = null): array
     {
-        return array_map(
-            function (BoardTile $boardTile) use ($parentTile) {
-                return $this->pathEndPoints->scoreBoardTile($boardTile, $parentTile);
-            },
-            $tiles
+        // Need to check if the tile is walkable or the destination
+        return array_reduce(
+            $tiles,
+            function ($boardTiles, BoardTile $boardTile) use ($parentTile) {
+                if ($boardTile->isWalkable() || $this->isDestination($boardTile)) {
+                    $boardTiles[] = $this->pathEndPoints->scoreBoardTile($boardTile, $parentTile);
+                }
+                return $boardTiles;
+            }
+
         );
     }
 
@@ -95,6 +100,11 @@ class PathFinder
                 return $path;
             }
         );
+    }
+
+    private function isDestination(BoardTile $boardTile)
+    {
+        return $this->pathEndPoints->getDestination() == $boardTile;
     }
 
     private function removePositionFromList($tileList, ScoredBoardTile $removeTile)
