@@ -1,5 +1,7 @@
 <?php
 
+use Kachuru\Vindinium\Bot\BasicBot;
+use Kachuru\Vindinium\Bot\Bot;
 use Kachuru\Vindinium\Game\Game;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 
@@ -38,16 +40,15 @@ class Client
 
     public function load()
     {
-        require('./Bot.php');
         require('./HttpPost.php');
 
         for ($i = 0; $i <= ($this->numberOfGames - 1); $i++) {
-            $this->start(new RandomBot());
+            $this->start(new BasicBot());
             echo "\nGame finished: " . ($i + 1) . "/" . $this->numberOfGames . "\n";
         }
     }
 
-    private function start($botObject)
+    private function start(Bot $bot)
     {
         $tileFactory = new TileFactory();
 
@@ -82,7 +83,7 @@ class Client
 
             // Move to some direction
             $url = $state['playUrl'];
-            $direction = $botObject->move($state);
+            $direction = $bot->move($board);
             $state = $this->move($url, $direction);
 
             $game = Game::buildFromResponse($state, $tileFactory);
