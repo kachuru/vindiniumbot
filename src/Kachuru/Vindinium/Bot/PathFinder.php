@@ -4,7 +4,6 @@ namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
-use Kachuru\Vindinium\Game\Position;
 
 class PathFinder
 {
@@ -25,6 +24,11 @@ class PathFinder
 
     public function find(): array
     {
+        /**
+         * Multi-destination - start at the destinations, get adjacent tiles for each destination, then work out
+         * which is the lowest score for all those tiles.
+         */
+
         $originTile = $this->pathEndPoints->scoreBoardTile($this->pathEndPoints->getOrigin());
         // Board tiles that have been shortlisted
         $closedList = [$originTile];
@@ -53,7 +57,7 @@ class PathFinder
 
         } while (!$nextMove->isAtDestination());
 
-        return array_merge($this->traceParents($closedList), [$nextMove]);
+        return $this->traceParents($nextMove);
     }
 
     public function scoreTiles($tiles, ScoredBoardTile $parentTile = null): array
@@ -84,22 +88,20 @@ class PathFinder
         );
     }
 
-    private function traceParents(array $closedList)
+    private function traceParents(ScoredBoardTile $destination)
     {
-        return array_reduce(
-            array_reverse($closedList),
-            function ($path, ScoredBoardTile $tile) {
-                if (is_null($path)) {
-                    $path = [];
-                }
+        $parent = $destination->getParent();
 
-                if ($tile->hasParent() && !in_array($tile->getParent(), $path)) {
-                    array_unshift($path, $tile->getParent());
-                }
+        $path = [$destination, $parent];
 
-                return $path;
+        while ($parent->hasParent()) {
+            $parent = $parent->getParent();
+            if (!is_null($parent)) {
+                $path[] = $parent;
             }
-        );
+        }
+
+        return array_reverse($path);
     }
 
     private function isDestination(BoardTile $boardTile)
