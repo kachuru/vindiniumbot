@@ -30,15 +30,13 @@ class PathFinder
          */
 
         $originTile = $this->pathEndPoints->scoreBoardTile($this->pathEndPoints->getOrigin());
+
         // Board tiles that have been shortlisted
-        $closedList = [$originTile];
+        $closedList = [];
 
         // Score the adjacent tiles at origin, and add them to the open list
         // This is a list of scored tiles
-        $openList = $this->scoreTiles(
-            $this->board->getAdjacentBoardTiles($this->pathEndPoints->getOrigin()->getPosition()),
-            $originTile
-        );
+        $openList = $this->scoreTiles($this->pathEndPoints->getDestinations());
 
         do {
             $nextMove = $this->getNextMove($openList);
@@ -71,7 +69,6 @@ class PathFinder
                 }
                 return $boardTiles;
             }
-
         );
     }
 
@@ -101,12 +98,12 @@ class PathFinder
             }
         }
 
-        return array_reverse($path);
+        return $path;
     }
 
     private function isDestination(BoardTile $boardTile)
     {
-        return $this->pathEndPoints->getDestination() == $boardTile;
+        return in_array($boardTile, $this->pathEndPoints->getDestinations());
     }
 
     private function removePositionFromList($tileList, ScoredBoardTile $removeTile)

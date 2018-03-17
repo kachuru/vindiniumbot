@@ -23,7 +23,7 @@ class PathEndPointsSpec extends ObjectBehavior
     {
         $this->beConstructedWith(
             $this->getEmptyBoardTile(new Position(0, 1)),
-            $this->getEmptyBoardTile(new Position(4, 3))
+            [$this->getEmptyBoardTile(new Position(4, 3))]
         );
     }
 
@@ -33,21 +33,22 @@ class PathEndPointsSpec extends ObjectBehavior
      */
     function it_calculates_the_distance_between_two_board_tiles()
     {
-        $this->estimateCostToDestination($this->getEmptyBoardTile(new Position(3, 3)))->shouldReturn(1);
-        $this->estimateCostToDestination($this->getEmptyBoardTile(new Position(4, 4)))->shouldReturn(1);
-        $this->estimateCostToDestination($this->getEmptyBoardTile(new Position(3, 2)))->shouldReturn(2);
-        $this->estimateCostToDestination($this->getEmptyBoardTile(new Position(1, 1)))->shouldReturn(5);
+
+        $this->estimateCostToOrigin($this->getEmptyBoardTile(new Position(0, 0)))->shouldReturn(1);
+        $this->estimateCostToOrigin($this->getEmptyBoardTile(new Position(1, 1)))->shouldReturn(1);
+        $this->estimateCostToOrigin($this->getEmptyBoardTile(new Position(1, 2)))->shouldReturn(2);
+        $this->estimateCostToOrigin($this->getEmptyBoardTile(new Position(3, 3)))->shouldReturn(5);
     }
 
     function it_scores_board_tile()
     {
         $originTile = $this->getScoredBoardTile($this->getEmptyBoardTile(new Position(0, 1)), [0, 6]);
 
-        $boardTileOne = $this->getEmptyBoardTile(new Position(1, 1));
+        $boardTileOne = $this->getEmptyBoardTile(new Position(4, 2));
         $resultTile = $this->getScoredBoardTile($boardTileOne, [1, 5], $originTile);
         $this->scoreBoardTile($boardTileOne, $originTile)->shouldBeLike($resultTile);
 
-        $boardTileTwo = $this->getEmptyBoardTile(new Position(2, 1));
+        $boardTileTwo = $this->getEmptyBoardTile(new Position(4, 1));
         $this->scoreBoardTile($boardTileTwo, $resultTile)->shouldBeLike(
             $this->getScoredBoardTile($boardTileTwo, [2, 4], $resultTile)
         );

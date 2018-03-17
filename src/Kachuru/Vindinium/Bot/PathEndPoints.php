@@ -9,17 +9,25 @@ use Kachuru\Vindinium\Game\Position;
 class PathEndPoints
 {
     private $origin;
-    private $destination;
+    private $destinations;
 
-    public static function buildFromBoard(Board $board, Position $origin, Position $destination)
+    public static function buildFromBoard(Board $board, Position $origin, array $destinations)
     {
-        return new self($board->getBoardTileAtPosition($origin), $board->getBoardTileAtPosition($destination));
+        return new self(
+            $board->getBoardTileAtPosition($origin),
+            array_map(
+                function (Position $position) use ($board) {
+                    return $board->getBoardTileAtPosition($position);
+                },
+                $destinations
+            )
+        );
     }
 
-    public function __construct(BoardTile $origin, BoardTile $destination)
+    public function __construct(BoardTile $origin, array $destinations)
     {
         $this->origin = $origin;
-        $this->destination = $destination;
+        $this->destinations = $destinations;
     }
 
     public function getOrigin(): BoardTile
@@ -27,9 +35,9 @@ class PathEndPoints
         return $this->origin;
     }
 
-    public function getDestination(): BoardTile
+    public function getDestinations(): array
     {
-        return $this->destination;
+        return $this->destinations;
     }
 
     public function scoreBoardTile(BoardTile $boardTile, ScoredBoardTile $parent = null): ScoredBoardTile
@@ -38,16 +46,16 @@ class PathEndPoints
             $boardTile,
             new BoardTileScore(
                 is_null($parent) ? 0 : $parent->getMoveCost() + 1,
-                $this->estimateCostToDestination($boardTile)
+                $this->estimateCostToOrigin($boardTile)
             ),
             $parent
         );
     }
 
-    public function estimateCostToDestination(BoardTile $from): int
+    public function estimateCostToOrigin(BoardTile $from): int
     {
         // LoD breakage
-        return abs($from->getPosition()->getX() - $this->destination->getPosition()->getX())
-            + abs($from->getPosition()->getY() - $this->destination->getPosition()->getY());
+        return abs($from->getPosition()->getX() - $this->origin->getPosition()->getX())
+            + abs($from->getPosition()->getY() - $this->origin->getPosition()->getY());
     }
 }
