@@ -40,9 +40,10 @@ class Game
                 $state['hero']['life'],
                 $state['hero']['gold'],
                 $state['hero']['mineCount'],
+            // X and Y are the other way round from the board
                 new Position(
-                    $state['hero']['pos']['x'],
-                    $state['hero']['pos']['y']
+                    $state['hero']['pos']['y'],
+                    $state['hero']['pos']['x']
                 )
             )
         );

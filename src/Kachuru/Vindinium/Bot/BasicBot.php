@@ -6,10 +6,11 @@ use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Game;
 use Kachuru\Vindinium\Game\Player\Player;
+use Kachuru\Vindinium\Game\Position;
 
 class BasicBot implements Bot
 {
-    private $currentDestination;
+    private $currentPath;
     private $player;
 
     public function __construct(Player $player)
@@ -17,10 +18,13 @@ class BasicBot implements Bot
         $this->player = $player;
     }
 
-    public function move(Board $board): string
+    public function move(Board $board, Position $position): string
     {
-        $dirs = ['Stay', 'North', 'South', 'East', 'West'];
-        return $dirs[mt_rand(0, count($dirs) - 1)];
+        if (empty($this->currentPath)) {
+            $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board), 1);
+        }
+
+        return $this->getNextMove($position);
     }
 
     public function getPathToNearestAvailableMine(Board $board)
@@ -42,5 +46,30 @@ class BasicBot implements Bot
                 return $boardTile->getPlayer() != $this->player->getId();
             }
         ));
+    }
+
+    private function getNextMove(Position $playerPosition)
+    {
+        // $playerPosition = $this->player->getPosition();
+        $nextTile = array_shift($this->currentPath);
+        $nextPosition = $nextTile->getPosition();
+
+        if ($playerPosition->getX() > $nextPosition->getX()) {
+            return 'West';
+        }
+
+        if ($playerPosition->getY() > $nextPosition->getY()) {
+            return 'North';
+        }
+
+        if ($playerPosition->getY() < $nextPosition->getY()) {
+            return 'South';
+        }
+
+        if ($playerPosition->getX() < $nextPosition->getX()) {
+            return 'East';
+        }
+
+        return 'Stay';
     }
 }

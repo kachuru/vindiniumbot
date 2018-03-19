@@ -62,7 +62,9 @@ class PathFinder
         return array_reduce(
             $tiles,
             function ($boardTiles, BoardTile $boardTile) use ($parentTile) {
-                if ($boardTile->isWalkable() || $this->isDestination($boardTile)) {
+                if ($boardTile->isWalkable()
+                    || $this->isDestination($boardTile)
+                    || $this->isOrigin($boardTile)) {
                     $boardTiles[] = $this->pathEndPoints->scoreBoardTile($boardTile, $parentTile);
                 }
                 return $boardTiles;
@@ -93,6 +95,11 @@ class PathFinder
         }
 
         return $path;
+    }
+
+    private function isOrigin(BoardTile $boardTile)
+    {
+        return $boardTile == $this->pathEndPoints->getOrigin();
     }
 
     private function isDestination(BoardTile $boardTile)

@@ -53,6 +53,17 @@ class BasicBotSpec extends ObjectBehavior
         );
     }
 
+    public function it_gets_move()
+    {
+        $this->beConstructedWith(new Player(1, 100, 0, 0, new Position(2, 0)));
+
+        $board = $this->buildBoard($this->getBoardWithMines(), 5);
+
+        $this->move($board, new Position(2, 0))->shouldReturn('South');
+        $this->move($board, new Position(2, 1))->shouldReturn('East');
+        $this->move($board, new Position(3, 1))->shouldReturn('East');
+    }
+
     private function getBoardWithMines()
     {
         return "          "

@@ -263,7 +263,7 @@ class PathFinderSpec extends ObjectBehavior
          *   ..........
          */
         return "          "
-            . "          "
+            . "@1        "
             . "          "
             . "        $-"
             . "          ";
@@ -280,7 +280,7 @@ class PathFinderSpec extends ObjectBehavior
          *   ..........
          */
         return "          "
-            . "          "
+            . "@1        "
             . "          "
             . "####    $-"
             . "          ";
@@ -297,7 +297,7 @@ class PathFinderSpec extends ObjectBehavior
          *   ..........
          */
         return "          "
-            . "          "
+            . "@1        "
             . "  ##      "
             . "####  ##$-"
             . "          ";
@@ -314,7 +314,7 @@ class PathFinderSpec extends ObjectBehavior
          *   ..........
          */
         return "          "
-            . "        $-"
+            . "@1      $-"
             . "          "
             . "        $-"
             . "          ";

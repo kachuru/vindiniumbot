@@ -66,7 +66,7 @@ class Client
 
         $bot = new BasicBot($game->getPlayer());
 
-        $windowSize = $state['game']['board']['size'] + 2;
+        $windowSize = $state['game']['board']['size'] + 3;
 
         for ($i = 0; $i < $windowSize; $i++) {
             echo PHP_EOL;
@@ -86,7 +86,8 @@ class Client
 
             // Move to some direction
             $url = $state['playUrl'];
-            $direction = $bot->move($board);
+            $direction = $bot->move($board, $game->getPlayer()->getPosition());
+            echo "Move: {$direction}    " . PHP_EOL;
             $state = $this->move($url, $direction);
 
             $game = Game::buildFromResponse($state, $tileFactory);

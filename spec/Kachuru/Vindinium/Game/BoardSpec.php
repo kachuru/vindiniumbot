@@ -111,6 +111,20 @@ class BoardSpec extends ObjectBehavior
             . "          ";
     }
 
+    private function getM1Board()
+    {
+        return "##@1    ####    @4##"
+            . "      ########      "
+            . "        ####        "
+            . "    []        []    "
+            . "$-    ##    ##    $-"
+            . "$-    ##    ##    $-"
+            . "    []        []    "
+            . "        ####  @3    "
+            . "      ########      "
+            . "##@2    ####      ##";
+    }
+
     private function buildBoard(string $boardString, int $size)
     {
         $this->beConstructedWith(
