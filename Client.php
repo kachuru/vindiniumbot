@@ -64,8 +64,6 @@ class Client
 
         printf('Playing at: %s as player #%d' . PHP_EOL . PHP_EOL, $state['viewUrl'], $game->getPlayer()->getId());
 
-        $bot = new BasicBot($game->getPlayer());
-
         $windowSize = $state['game']['board']['size'] + 3;
 
         for ($i = 0; $i < $windowSize; $i++) {
@@ -74,6 +72,7 @@ class Client
 
         ob_start();
         while (!$game->isFinished()) {
+            $bot = new BasicBot($game->getPlayer());
 
             $this->cursorUp($windowSize);
 
