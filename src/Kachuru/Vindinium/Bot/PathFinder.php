@@ -83,17 +83,13 @@ class PathFinder
         );
     }
 
-    private function traceParents(ScoredBoardTile $destination)
+    private function traceParents(ScoredBoardTile $scoredBoardTile)
     {
-        $parent = $destination->getParent();
+        $path = [$scoredBoardTile->getBoardTile()];
 
-        $path = [$destination, $parent];
-
-        while ($parent->hasParent()) {
-            $parent = $parent->getParent();
-            if (!is_null($parent)) {
-                $path[] = $parent;
-            }
+        while ($scoredBoardTile->hasParent()) {
+            $scoredBoardTile = $scoredBoardTile->getParent();
+            $path[] = $scoredBoardTile->getBoardTile();
         }
 
         return $path;

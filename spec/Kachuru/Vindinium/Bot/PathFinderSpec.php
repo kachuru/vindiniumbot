@@ -128,23 +128,15 @@ class PathFinderSpec extends ObjectBehavior
             PathEndPoints::buildFromBoard($board, $origin, [$destination])
         );
 
-        $destinationTile = $this->getScoredBoardTile($board->getBoardTileAtPosition($destination), [0, 6]);
-        $moveFive = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 3)), [1, 5], $destinationTile);
-        $moveFour = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 3)), [2, 4], $moveFive);
-        $moveThree = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(1, 3)), [3, 3], $moveFour);
-        $moveTwo = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 3)), [4, 2], $moveThree);
-        $moveOne = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 2)), [5, 1], $moveTwo);
-        $originTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 1)), [6, 0], $moveOne);
-
         $this->find()->shouldBeLike(
             [
-                $originTile,
-                $moveOne,
-                $moveTwo,
-                $moveThree,
-                $moveFour,
-                $moveFive,
-                $destinationTile
+                $board->getBoardTileAtPosition(new Position(0, 1)),
+                $board->getBoardTileAtPosition(new Position(0, 2)),
+                $board->getBoardTileAtPosition(new Position(0, 3)),
+                $board->getBoardTileAtPosition(new Position(1, 3)),
+                $board->getBoardTileAtPosition(new Position(2, 3)),
+                $board->getBoardTileAtPosition(new Position(3, 3)),
+                $board->getBoardTileAtPosition($destination)
             ]
         );
     }
@@ -169,24 +161,15 @@ class PathFinderSpec extends ObjectBehavior
             PathEndPoints::buildFromBoard($board, $origin, [$destination])
         );
 
-
-        $destinationTile = $this->getScoredBoardTile($board->getBoardTileAtPosition($destination), [0, 6]);
-        $moveFive = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 3)), [1, 5], $destinationTile);
-        $moveFour = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 3)), [2, 4], $moveFive);
-        $moveThree = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 2)), [3, 3], $moveFour);
-        $moveTwo = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(1, 2)), [4, 2], $moveThree);
-        $moveOne = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 2)), [5, 1], $moveTwo);
-        $originTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 1)), [6, 0], $moveOne);
-
         $this->find()->shouldBeLike(
             [
-                $originTile,
-                $moveOne,
-                $moveTwo,
-                $moveThree,
-                $moveFour,
-                $moveFive,
-                $destinationTile
+                $board->getBoardTileAtPosition(new Position(0, 1)),
+                $board->getBoardTileAtPosition(new Position(0, 2)),
+                $board->getBoardTileAtPosition(new Position(1, 2)),
+                $board->getBoardTileAtPosition(new Position(2, 2)),
+                $board->getBoardTileAtPosition(new Position(2, 3)),
+                $board->getBoardTileAtPosition(new Position(3, 3)),
+                $board->getBoardTileAtPosition($destination)
             ]
         );
     }
@@ -210,32 +193,21 @@ class PathFinderSpec extends ObjectBehavior
             PathEndPoints::buildFromBoard($board, $origin, [$destination])
         );
 
-        $destinationTile = $this->getScoredBoardTile($board->getBoardTileAtPosition($destination), [0, 6]);
-        $moveFive = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(4, 2)), [1, 5], $destinationTile);
-        $moveFour = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 2)), [2, 4], $moveFive);
-        $moveThree = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 2)), [3, 3], $moveFour);
-        $moveTwo = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 1)), [4, 2], $moveThree);
-        $moveOne = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(1, 1)), [5, 1], $moveTwo);
-        $originTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 1)), [6, 0], $moveOne);
-
         $this->find()->shouldBeLike(
             [
-                $originTile,
-                $moveOne,
-                $moveTwo,
-                $moveThree,
-                $moveFour,
-                $moveFive,
-                $destinationTile
+                $board->getBoardTileAtPosition(new Position(0, 1)),
+                $board->getBoardTileAtPosition(new Position(1, 1)),
+                $board->getBoardTileAtPosition(new Position(2, 1)),
+                $board->getBoardTileAtPosition(new Position(2, 2)),
+                $board->getBoardTileAtPosition(new Position(3, 2)),
+                $board->getBoardTileAtPosition(new Position(4, 2)),
+                $board->getBoardTileAtPosition($destination)
             ]
         );
     }
 
     function it_picks_the_shortest_path_for_multi_destination()
     {
-        /**
-         *
-         */
         $origin = new Position(0, 1);
         $destinations = [new Position(4, 3), new Position(4, 1)];
 
@@ -245,19 +217,13 @@ class PathFinderSpec extends ObjectBehavior
             PathEndPoints::buildFromBoard($board, $origin, $destinations)
         );
 
-        $destinationTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(4, 1)), [0, 4]);
-        $moveThree = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 1)), [1, 3], $destinationTile);
-        $moveTwo = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 1)), [2, 2], $moveThree);
-        $moveOne = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(1, 1)), [3, 1], $moveTwo);
-        $originTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(0, 1)), [4, 0], $moveOne);
-
         $this->find()->shouldBeLike(
             [
-                $originTile,
-                $moveOne,
-                $moveTwo,
-                $moveThree,
-                $destinationTile
+                $board->getBoardTileAtPosition(new Position(0, 1)),
+                $board->getBoardTileAtPosition(new Position(1, 1)),
+                $board->getBoardTileAtPosition(new Position(2, 1)),
+                $board->getBoardTileAtPosition(new Position(3, 1)),
+                $board->getBoardTileAtPosition(new Position(4, 1))
             ]
         );
     }

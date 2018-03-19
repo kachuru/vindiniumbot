@@ -23,7 +23,18 @@ class BasicBot implements Bot
         return $dirs[mt_rand(0, count($dirs) - 1)];
     }
 
-    public function chooseDestinations(Board $board)
+    public function getPathToNearestAvailableMine(Board $board)
+    {
+        return (new PathFinder(
+            $board,
+            new PathEndPoints(
+                $board->getBoardTileAtPosition($this->player->getPosition()),
+                $this->getMinesNotOwnedByMe($board)
+            )
+        ))->find();
+    }
+
+    public function getMinesNotOwnedByMe(Board $board)
     {
         return array_values(array_filter(
             $board->getMineTiles(),

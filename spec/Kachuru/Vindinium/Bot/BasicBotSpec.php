@@ -7,6 +7,7 @@ use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Player\Player;
 use Kachuru\Vindinium\Game\Position;
+use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\Tile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
@@ -22,11 +23,11 @@ class BasicBotSpec extends ObjectBehavior
 {
     public function it_finds_available_destinations()
     {
-        $this->beConstructedWith(new Player(1, 100, 0, 0, new Position(0, 0)));
+        $this->beConstructedWith(new Player(1, 100, 0, 0, new Position(1, 1)));
 
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
 
-        $this->chooseDestinations($board)->shouldBeLike(
+        $this->getMinesNotOwnedByMe($board)->shouldBeLike(
             [
                 new BoardTile(new Tile(new MineTile(), '$-'), new Position(4, 1)),
                 new BoardTile(new Tile(new MineTile(), '$-'), new Position(0, 3)),
@@ -34,6 +35,22 @@ class BasicBotSpec extends ObjectBehavior
             ]
         );
 
+    }
+
+    public function it_chooses_the_nearest_destination()
+    {
+        $this->beConstructedWith(new Player(1, 100, 0, 0, new Position(2, 0)));
+
+        $board = $this->buildBoard($this->getBoardWithMines(), 5);
+
+        $this->getPathToNearestAvailableMine($board)->shouldBeLike(
+            [
+                new BoardTile(new Tile(new EmptyTile(), '  '), new Position(2, 0)),
+                new BoardTile(new Tile(new EmptyTile(), '  '), new Position(2, 1)),
+                new BoardTile(new Tile(new EmptyTile(), '  '), new Position(3, 1)),
+                new BoardTile(new Tile(new MineTile(), '$-'), new Position(4, 1)),
+            ]
+        );
     }
 
     private function getBoardWithMines()

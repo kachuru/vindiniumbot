@@ -32,6 +32,11 @@ class ScoredBoardTile
         return $this->parent;
     }
 
+    public function getBoardTile(): BoardTile
+    {
+        return $this->boardTile;
+    }
+
     public function getPosition(): Position
     {
         return $this->boardTile->getPosition();
