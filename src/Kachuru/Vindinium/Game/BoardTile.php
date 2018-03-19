@@ -25,8 +25,18 @@ class BoardTile
         return $this->position;
     }
 
+    public function getPlayer(): int
+    {
+        return (int) $this->tile->getPlayer();
+    }
+
     public function isWalkable(): bool
     {
         return $this->tile->isWalkable();
+    }
+
+    public function __toString(): string
+    {
+        return (string) $this->tile;
     }
 }

@@ -12,9 +12,6 @@ class Player
     private $life;
     private $gold;
     private $mineCount;
-    /**
-     * @var PlayerPosition
-     */
     private $position;
 
     public function __construct($id, $life, $gold, $mineCount, Position $position)

@@ -10,24 +10,27 @@ class TileFactory
 
     public function buildTile(string $content): Tile
     {
-        return new Tile(
-            $this->getTileTypeFromContent($content), $content
-        );
+        return $this->getTileFromContent($content);
     }
 
-    private function getTileTypeFromContent($content)
+    private function getTileFromContent($content)
     {
         $type = array_reduce(
             self::TILE_TYPES,
-            function ($carry, $tileType) use ($content) {
+            function ($tile, $tileType) use ($content) {
                 /**
                  * @var \Kachuru\Vindinium\Game\Tile\TileType $class
                  */
                 $class = 'Kachuru\Vindinium\Game\Tile\\' . $tileType;
-                if (preg_match($class::getPattern(), $content)) {
-                    $carry = new $class();
+                if (preg_match($class::getPattern(), $content, $match)) {
+                    $tile = new Tile(
+                        new $class(),
+                        $content,
+                        array_key_exists('player', $match) ? $match['player'] : null
+                    );
                 }
-                return $carry;
+
+                return $tile;
             }
         );
 

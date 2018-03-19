@@ -4,7 +4,7 @@ namespace Kachuru\Vindinium\Game\Tile;
 
 class MineTile implements TileType
 {
-    public const TILE_SPECIFICATION = '/\$[1-4\-]/';
+    public const TILE_SPECIFICATION = '/\$(?P<player>[1-4\-])/';
 
     const WALKABLE = false;
 

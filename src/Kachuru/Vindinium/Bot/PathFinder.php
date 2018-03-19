@@ -29,8 +29,6 @@ class PathFinder
          * which is the lowest score for all those tiles.
          */
 
-        $originTile = $this->pathEndPoints->scoreBoardTile($this->pathEndPoints->getOrigin());
-
         // Board tiles that have been shortlisted
         $closedList = [];
 

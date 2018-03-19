@@ -10,6 +10,7 @@ class Board
 
     private $size;
     private $tiles;
+    private $tileTypes;
 
     public static function buildFromVindiniumResponse(TileFactory $tileFactory, array $response): self
     {
@@ -29,13 +30,17 @@ class Board
         $this->size = $size;
 
         $this->tiles = array_map(
-            function ($row) use ($tileFactory) {
-                return array_map(function($tileString) use ($tileFactory) {
-                    return $tileFactory->buildTile($tileString);
-                },
-                str_split($row, 2));
+            function ($row, $y) use ($tileFactory) {
+                return array_map(
+                    function($tileString, $x) use ($tileFactory, $y) {
+                        return $this->buildTile($tileFactory, $tileString, $x, $y);
+                    },
+                    str_split($row, 2),
+                    range(0, $this->size - 1)
+                );
             },
-            str_split($tiles, $this->size * 2)
+            str_split($tiles, $this->size * 2),
+            range(0, $this->size - 1)
         );
     }
 
@@ -43,10 +48,15 @@ class Board
     {
         if (array_key_exists($position->getY(), $this->tiles)
             && array_key_exists($position->getX(), $this->tiles[$position->getY()])) {
-            return new BoardTile($this->tiles[$position->getY()][$position->getX()], $position);
+            return $this->tiles[$position->getY()][$position->getX()];
         }
 
         return null;
+    }
+
+    public function getMineTiles()
+    {
+        return $this->tileTypes['MineTile'];
     }
 
     /**
@@ -80,5 +90,12 @@ class Board
             },
             $this->tiles
         )) . PHP_EOL;
+    }
+
+    private function buildTile(TileFactory $tileFactory, $tileString, $x, $y)
+    {
+        $tile = new BoardTile($tileFactory->buildTile($tileString), new Position($x, $y));
+        $this->tileTypes[$tile->getTile()->getTypeName()][] = $tile;
+        return $tile;
     }
 }

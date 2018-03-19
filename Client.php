@@ -43,12 +43,12 @@ class Client
         require('./HttpPost.php');
 
         for ($i = 0; $i <= ($this->numberOfGames - 1); $i++) {
-            $this->start(new BasicBot());
+            $this->start();
             echo "\nGame finished: " . ($i + 1) . "/" . $this->numberOfGames . "\n";
         }
     }
 
-    private function start(Bot $bot)
+    private function start()
     {
         $tileFactory = new TileFactory();
 
@@ -59,15 +59,18 @@ class Client
 
         // Get the initial state
         $state = $this->getNewGameState();
-        echo "Playing at: " . $state['viewUrl'] . "\n\n";
+
+        $game = Game::buildFromResponse($state, $tileFactory);
+
+        printf('Playing at: %s as player #%d' . PHP_EOL . PHP_EOL, $state['viewUrl'], $game->getPlayer()->getId());
+
+        $bot = new BasicBot($game->getPlayer());
 
         $windowSize = $state['game']['board']['size'] + 2;
 
         for ($i = 0; $i < $windowSize; $i++) {
             echo PHP_EOL;
         }
-
-        $game = Game::buildFromResponse($state, $tileFactory);
 
         ob_start();
         while (!$game->isFinished()) {

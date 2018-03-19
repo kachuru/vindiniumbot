@@ -6,6 +6,7 @@ use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
+use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\Tile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use Kachuru\Vindinium\Game\Tile\WallTile;
@@ -78,6 +79,20 @@ class BoardSpec extends ObjectBehavior
         );
     }
 
+    public function it_returns_the_mine_tiles()
+    {
+        $this->buildBoard($this->getBoardWithMines(), 5);
+
+        $this->getMineTiles()->shouldBeLike(
+            [
+                new BoardTile(new Tile(new MineTile, '$1', 1), new Position(0, 1)),
+                new BoardTile(new Tile(new MineTile, '$-'), new Position(4, 1)),
+                new BoardTile(new Tile(new MineTile, '$-'), new Position(0, 3)),
+                new BoardTile(new Tile(new MineTile, '$2', 2), new Position(4, 3)),
+            ]
+        );
+    }
+
     private function getSimpleTestBoard()
     {
         return "          "
@@ -85,6 +100,15 @@ class BoardSpec extends ObjectBehavior
              . "  ######  "
              . "          "
              . "          ";
+    }
+
+    private function getBoardWithMines()
+    {
+        return "          "
+            . "$1      $-"
+            . "          "
+            . "$-      $2"
+            . "          ";
     }
 
     private function buildBoard(string $boardString, int $size)

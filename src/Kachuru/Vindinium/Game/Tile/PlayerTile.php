@@ -4,7 +4,7 @@ namespace Kachuru\Vindinium\Game\Tile;
 
 class PlayerTile implements TileType
 {
-    const TILE_SPECIFICATION = '/@[1-4]/';
+    const TILE_SPECIFICATION = '/@(?P<player>[1-4])/';
     const WALKABLE = false;
 
     public static function getPattern(): string

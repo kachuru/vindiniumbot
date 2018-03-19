@@ -19,6 +19,7 @@ class TileSpec extends ObjectBehavior
         $type = new EmptyTile();
         $this->beConstructedWith($type, '  ');
         $this->getType()->shouldReturn($type);
+        $this->getTypeName()->shouldReturn('EmptyTile');
         $this->__toString()->shouldReturn('  ');
     }
 }
