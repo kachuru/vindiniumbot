@@ -2,5 +2,6 @@
 ._*
 .DS_Store
 
+config/parameters.yaml
 composer.phar
 vendor/

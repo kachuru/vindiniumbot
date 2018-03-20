@@ -6,7 +6,9 @@
     },
     "require": {
         "symfony/event-dispatcher": "^4.0",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/dependency-injection": "^4.0",
+        "symfony/config": "^4.0"
     },
     "require-dev": {
         "phpspec/phpspec": "^4.3"

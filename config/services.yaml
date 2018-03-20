@@ -1,0 +1,6 @@
+services:
+  Kachuru\Vindinium\Bot\ScoredBoardTile:
+    class: Kachuru\Vindinium\Bot\ScoredBoardTile
+    arguments:
+      - Kachuru\Vindinium\Game\BoardTile
+      - Kachuru\Vindinium\Bot\BoardTileScore

@@ -1,0 +1,4 @@
+services:
+    vindinium-bot.console:
+      class: 'Symfony\Component\Console\Application'
+      public: true
