@@ -1,8 +1,8 @@
 <?php
 
+namespace Kachuru\Vindinium\Game;
+
 use Kachuru\Vindinium\Bot\BasicBot;
-use Kachuru\Vindinium\Bot\Bot;
-use Kachuru\Vindinium\Game\Game;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 
 class Client
@@ -10,52 +10,54 @@ class Client
     CONST TIMEOUT = 15;
 
     private $key;
-    private $mode;
-    private $numberOfGames;
-    private $numberOfTurns;
-    private $serverUrl = 'http://vindinium.org';
+    private $server;
+    private $endPoint;
+    private $params = [];
 
-    public function __construct()
+    public function __construct($server, $key)
     {
-        if ($_SERVER['argc'] < 4) {
-            echo "Usage: " . $_SERVER['SCRIPT_FILENAME'] . " <key> <[training|arena]> <number-of-games|number-of-turns> [server-url]\n";
-            echo "Example: " . $_SERVER['SCRIPT_FILENAME'] . " mySecretKey training 20\n";
-        } else {
-            $this->key = $_SERVER['argv'][1];
-            $this->mode = $_SERVER['argv'][2];
+        $this->server = $server;
+        $this->key = $key;
+    }
 
-            if ($this->mode == "training") {
-                $this->numberOfGames = 1;
-                $this->numberOfTurns = (int)$_SERVER['argv'][3];
-            } else {
-                $this->numberOfGames = (int)$_SERVER['argv'][3];
-                $this->numberOfTurns = 300; # Ignored in arena mode
-            }
+    public function startTraining($turns = 300, $map = 1)
+    {
+        $this->endPoint = '/api/training';
+        $this->params = [
+            'key' => $this->key,
+            'turns' => $turns,
+            'map' => 'm' . $map,
+        ];
 
-            if ($_SERVER['argc'] == 5) {
-                $this->serverUrl = $_SERVER['argv'][4];
-            }
+        echo "Starting training mode" . PHP_EOL;
+
+        $this->run();
+
+        echo "Finished" . PHP_EOL;
+    }
+
+    public function startArena($games = 1)
+    {
+        $this->endPoint = '/api/arena';
+        $this->params = [
+            'key' => $this->key
+        ];
+
+        echo "Starting arena mode" . PHP_EOL;
+
+        for ($i = 1; $i <= $games; $i++) {
+            echo "Game starting: {$i}/{$games}" . PHP_EOL;
+            echo "Connected and waiting for other players to join..." . PHP_EOL;
+
+            $this->run();
+
+            echo "Game finished: {$i}/{$games}" . PHP_EOL;
         }
     }
 
-    public function load()
-    {
-        require('./HttpPost.php');
-
-        for ($i = 0; $i <= ($this->numberOfGames - 1); $i++) {
-            $this->start();
-            echo "\nGame finished: " . ($i + 1) . "/" . $this->numberOfGames . "\n";
-        }
-    }
-
-    private function start()
+    private function run()
     {
         $tileFactory = new TileFactory();
-
-        // Starts a game with all the required parameters
-        if ($this->mode == 'arena') {
-            echo "Connected and waiting for other players to join...\n";
-        }
 
         // Get the initial state
         $state = $this->getNewGameState();
@@ -96,20 +98,8 @@ class Client
 
     private function getNewGameState()
     {
-        $apiEndpoint = '/api/arena';
-        $params = [
-            'key' => $this->key
-        ];
-
-        // Get a JSON from the server containing the current state of the game
-        if ($this->mode == 'training') {
-            $apiEndpoint = '/api/training';
-            $params['turns'] = $this->numberOfTurns;
-            $params['map'] = 'm1';
-        }
-
         // Wait for 10 minutes
-        $response = HttpPost::post($this->serverUrl . $apiEndpoint, $params, 10 * 60);
+        $response = HttpPost::post($this->server . $this->endPoint, $this->params, 10 * 60);
 
         if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
             return json_decode($response['content'], true);

@@ -1,5 +1,7 @@
 <?php
 
+namespace Kachuru\Vindinium\Game;
+
 class HttpPost
 {
 
