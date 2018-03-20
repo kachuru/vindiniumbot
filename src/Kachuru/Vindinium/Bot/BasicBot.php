@@ -4,7 +4,6 @@ namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
-use Kachuru\Vindinium\Game\Game;
 use Kachuru\Vindinium\Game\Player\Player;
 use Kachuru\Vindinium\Game\Position;
 
