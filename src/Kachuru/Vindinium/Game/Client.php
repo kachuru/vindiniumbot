@@ -83,16 +83,19 @@ class Client
 
             $player = $game->getPlayer();
             print($player->print() . PHP_EOL);
-            ob_flush();
 
             // Move to some direction
             $url = $state['playUrl'];
             $direction = $bot->move($board, $game->getPlayer()->getPosition());
-            echo "Move: {$direction}    " . PHP_EOL;
+
             $state = $this->move($url, $direction);
 
+            printf("Turn %4d - Move: %5s" . PHP_EOL, $state['game']['turn'] / 4, $direction);
+
             $game = Game::buildFromResponse($state, $tileFactory);
+            ob_flush();
         }
+        echo PHP_EOL . PHP_EOL;
         ob_end_clean();
     }
 
