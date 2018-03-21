@@ -36,6 +36,10 @@ class PathFinder
         // This is a list of scored tiles
         $openList = $this->scoreTiles($this->pathEndPoints->getDestinations());
 
+        if (empty($openList)) {
+            return [];
+        }
+
         do {
             $nextMove = $this->getNextMove($openList);
 
@@ -68,7 +72,8 @@ class PathFinder
                     $boardTiles[] = $this->pathEndPoints->scoreBoardTile($boardTile, $parentTile);
                 }
                 return $boardTiles;
-            }
+            },
+            []
         );
     }
 

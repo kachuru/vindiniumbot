@@ -10,45 +10,66 @@ use Kachuru\Vindinium\Game\Position;
 class BasicBot implements Bot
 {
     private $currentPath;
-    private $player;
 
-    public function __construct(Player $player)
+    public function __construct()
     {
-        $this->player = $player;
     }
 
-    public function move(Board $board, Position $position): string
+    public function chooseNextMove(Board $board, Player $player): string
     {
-        if (empty($this->currentPath)) {
-            $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board), 1);
+        /**
+         * Have to disable this as there is no way to check whether the current path is still valid
+         */
+//        if (empty($this->currentPath)) {
+//            $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);
+//        }
+        if ($player->getLife() < 60) {
+            $this->currentPath = array_slice($this->getPathToNearestTavern($board, $player), 1);
+        } else {
+            $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);
         }
 
-        return $this->getNextMove($position);
+        return $this->getNextMove($player->getPosition());
     }
 
-    public function getPathToNearestAvailableMine(Board $board)
+    public function getPathToNearestAvailableMine(Board $board, Player $player): array
     {
         return (new PathFinder(
             $board,
             new PathEndPoints(
-                $board->getBoardTileAtPosition($this->player->getPosition()),
-                $this->getMinesNotOwnedByMe($board)
+                $board->getBoardTileAtPosition($player->getPosition()),
+                $this->getMinesNotOwnedByMe($board, $player)
             )
         ))->find();
     }
 
-    public function getMinesNotOwnedByMe(Board $board)
+    public function getPathToNearestTavern(Board $board, Player $player): array
+    {
+        return (new PathFinder(
+            $board,
+            new PathEndPoints(
+                $board->getBoardTileAtPosition($player->getPosition()),
+                $board->getTavernTiles()
+            )
+        ))->find();
+    }
+
+    public function getMinesNotOwnedByMe(Board $board, Player $player): array
     {
         return array_values(array_filter(
             $board->getMineTiles(),
-            function (BoardTile $boardTile) {
-                return $boardTile->getPlayer() != $this->player->getId();
+            function (BoardTile $boardTile) use ($player) {
+                return $boardTile->getPlayer() != $player->getId();
             }
         ));
     }
 
     private function getNextMove(Position $playerPosition)
     {
+        if (empty($this->currentPath)) {
+            return 'Stay';
+        }
+
         // $playerPosition = $this->player->getPosition();
         $nextTile = array_shift($this->currentPath);
         $nextPosition = $nextTile->getPosition();

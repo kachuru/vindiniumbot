@@ -59,6 +59,11 @@ class Board
         return $this->tileTypes['MineTile'];
     }
 
+    public function getTavernTiles()
+    {
+        return $this->tileTypes['TavernTile'];
+    }
+
     /**
      * FIXME: This should take a BoardTile instead of a position
      */

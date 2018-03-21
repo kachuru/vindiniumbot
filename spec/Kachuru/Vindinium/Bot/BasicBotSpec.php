@@ -59,9 +59,9 @@ class BasicBotSpec extends ObjectBehavior
 
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
 
-        $this->move($board, new Position(2, 0))->shouldReturn('South');
-        $this->move($board, new Position(2, 1))->shouldReturn('East');
-        $this->move($board, new Position(3, 1))->shouldReturn('East');
+        $this->chooseNextMove($board, new Position(2, 0))->shouldReturn('South');
+        $this->chooseNextMove($board, new Position(2, 1))->shouldReturn('East');
+        $this->chooseNextMove($board, new Position(3, 1))->shouldReturn('East');
     }
 
     private function getBoardWithMines()

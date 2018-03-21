@@ -8,6 +8,5 @@ use Kachuru\Vindinium\Game\Position;
 
 interface Bot
 {
-    public function __construct(Player $player);
-    public function move(Board $board, Position $position): string;
+    public function chooseNextMove(Board $board, Player $player): string;
 }

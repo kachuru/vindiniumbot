@@ -72,10 +72,10 @@ class Client
             echo PHP_EOL;
         }
 
+        $bot = new BasicBot();
+
         ob_start();
         while (!$game->isFinished()) {
-            $bot = new BasicBot($game->getPlayer());
-
             $this->cursorUp($windowSize);
 
             $board = $game->getBoard();
@@ -86,11 +86,11 @@ class Client
 
             // Move to some direction
             $url = $state['playUrl'];
-            $direction = $bot->move($board, $game->getPlayer()->getPosition());
+            $direction = $bot->chooseNextMove($board, $game->getPlayer());
 
             $state = $this->move($url, $direction);
 
-            printf("Turn %4d - Move: %5s" . PHP_EOL, $state['game']['turn'] / 4, $direction);
+            printf("Turn %4d - Move: %5s" . PHP_EOL, $state['game']['turn'], $direction);
 
             $game = Game::buildFromResponse($state, $tileFactory);
             ob_flush();
@@ -102,7 +102,7 @@ class Client
     private function getNewGameState()
     {
         // Wait for 10 minutes
-        $response = HttpPost::post($this->server . $this->endPoint, $this->params, 10 * 60);
+        $response = HttpPost::post($this->server . $this->endPoint, $this->params, 30 * 60);
 
         if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
             return json_decode($response['content'], true);
