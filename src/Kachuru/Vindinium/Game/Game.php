@@ -24,8 +24,12 @@ class Game
      * @var Player
      */
     private $player;
+    /**
+     * @var array
+     */
+    private $enemies;
 
-    public static function buildFromResponse($state, TileFactory $tileFactory)
+    public static function buildFromVindiniumResponse($state, TileFactory $tileFactory)
     {
         return new self(
             (string) $state['game']['id'],
@@ -35,26 +39,23 @@ class Game
                 (bool) $state['game']['finished']
             ),
             Board::buildFromVindiniumResponse($tileFactory, $state['game']['board']),
-            new Player(
-                $state['hero']['id'],
-                $state['hero']['life'],
-                $state['hero']['gold'],
-                $state['hero']['mineCount'],
-            // X and Y are the other way round from the board
-                new Position(
-                    $state['hero']['pos']['y'],
-                    $state['hero']['pos']['x']
+            Player::buildFromVindiniumResponse($state['hero']),
+            Player::buildAllFromVindiniumResponse(
+                array_diff_key(
+                    $state['game']['heroes'],
+                    [$state['hero']['id'] - 1 => null]
                 )
             )
         );
     }
 
-    private function __construct(string $id, State $state, Board $board, Player $player)
+    private function __construct(string $id, State $state, Board $board, Player $player, array $enemies)
     {
         $this->state = $state;
         $this->id = $id;
         $this->board = $board;
         $this->player = $player;
+        $this->enemies = $enemies;
     }
 
     public function getId(): string
@@ -75,6 +76,11 @@ class Game
     public function getPlayer(): Player
     {
         return $this->player;
+    }
+
+    public function getEnemies(): array
+    {
+        return $this->enemies;
     }
 
     public function isFinished(): bool

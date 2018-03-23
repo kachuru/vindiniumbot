@@ -44,6 +44,16 @@ class Board
         );
     }
 
+    public function __toString(): string
+    {
+        return (string) implode(PHP_EOL, array_map(
+            function ($row) {
+                return implode('', $row);
+            },
+            $this->tiles
+        ));
+    }
+
     public function getBoardTileAtPosition(Position $position): ?BoardTile
     {
         if (array_key_exists($position->getY(), $this->tiles)
@@ -85,16 +95,6 @@ class Board
         );
 
         return $tiles;
-    }
-
-    public function __toString(): string
-    {
-        return (string) implode(PHP_EOL, array_map(
-            function ($row) {
-                return implode('', $row);
-            },
-            $this->tiles
-        )) . PHP_EOL;
     }
 
     private function buildTile(TileFactory $tileFactory, $tileString, $x, $y)

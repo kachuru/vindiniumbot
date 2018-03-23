@@ -23,7 +23,7 @@ class TrainCommand extends Command
         $this->setName('train');
         $this->setDescription('Run the bot in training mode');
         $this->addOption('turns', 't', InputOption::VALUE_OPTIONAL, 'Number of turns to run for', 300);
-        $this->addOption('map', 'm', InputOption::VALUE_OPTIONAL, 'Map to run', 1);
+        $this->addOption('map', 'm', InputOption::VALUE_OPTIONAL, 'Map to run');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -14,6 +14,30 @@ class Player
     private $mineCount;
     private $position;
 
+    public static function buildFromVindiniumResponse(array $response): Player
+    {
+        return new self(
+            $response['id'],
+            $response['life'],
+            $response['gold'],
+            $response['mineCount'] ,
+            // X and Y are the other way round from the board
+            new Position(
+                $response['pos']['y'],
+                $response['pos']['x']
+            )
+        );
+    }
+
+    public static function buildAllFromVindiniumResponse(array $players): array
+    {
+        foreach ($players as $i => $player) {
+            $players[$i] = self::buildFromVindiniumResponse($player);
+        }
+
+        return $players;
+    }
+
     public function __construct($id, $life, $gold, $mineCount, Position $position)
     {
         $this->id = $id;
@@ -21,6 +45,19 @@ class Player
         $this->gold = $gold;
         $this->mineCount = $mineCount;
         $this->position = $position;
+    }
+
+    public function __toString()
+    {
+        return sprintf(
+            self::PLAYER_OUTPUT,
+            $this->id,
+            $this->position->getX(),
+            $this->position->getY(),
+            $this->life,
+            $this->gold,
+            $this->mineCount
+        );
     }
 
     /**
@@ -61,18 +98,5 @@ class Player
     public function getPosition(): Position
     {
         return $this->position;
-    }
-
-    public function print()
-    {
-        return sprintf(
-            self::PLAYER_OUTPUT,
-            $this->id,
-            $this->position->getX(),
-            $this->position->getY(),
-            $this->life,
-            $this->gold,
-            $this->mineCount
-        );
     }
 }

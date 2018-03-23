@@ -2,12 +2,15 @@
 
 namespace Kachuru\Vindinium\Game;
 
+use Kachuru\Util\ConsoleOutput;
+use Kachuru\Util\ConsoleWindow;
 use Kachuru\Vindinium\Bot\BasicBot;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 
 class Client
 {
-    CONST TIMEOUT = 15;
+    const GAME_WAIT_TIMEOUT = 15;
+    const NEW_GAME_WAIT_TIMEOUT = 30 * 60;
 
     private $key;
     private $server;
@@ -20,14 +23,17 @@ class Client
         $this->key = $key;
     }
 
-    public function startTraining($turns = 300, $map = 1)
+    public function startTraining($turns = 300, $map = null)
     {
         $this->endPoint = '/api/training';
         $this->params = [
             'key' => $this->key,
             'turns' => $turns,
-            'map' => 'm' . $map,
         ];
+
+        if (!is_null($map)) {
+            $this->params['map'] = 'm' . $map;
+        }
 
         echo "Starting training mode" . PHP_EOL;
 
@@ -62,47 +68,56 @@ class Client
         // Get the initial state
         $state = $this->getNewGameState();
 
-        $game = Game::buildFromResponse($state, $tileFactory);
+        $game = Game::buildFromVindiniumResponse($state, $tileFactory);
 
-        printf('Playing at: %s as player #%d' . PHP_EOL . PHP_EOL, $state['viewUrl'], $game->getPlayer()->getId());
+        $boardSize = $state['game']['board']['size'];
 
-        $windowSize = $state['game']['board']['size'] + 3;
-
-        for ($i = 0; $i < $windowSize; $i++) {
-            echo PHP_EOL;
-        }
+        $consoleOutput = (new ConsoleOutput(
+            [
+                new ConsoleWindow(1, 1, 118, 1),
+                new ConsoleWindow(1, 3, $boardSize * 2, $boardSize),
+                new ConsoleWindow(($boardSize * 2) + 2, 3, 117 - ($boardSize * 2), $boardSize)
+            ]
+        ))->prepare();
 
         $bot = new BasicBot();
 
-        ob_start();
+        // ob_start();
         while (!$game->isFinished()) {
-            $this->cursorUp($windowSize);
+            $consoleOutput->write(0, sprintf(' Game: %s - Turn: %d', $state['viewUrl'], $state['game']['turn']));
 
             $board = $game->getBoard();
-            print($board . PHP_EOL);
-
-            $player = $game->getPlayer();
-            print($player->print() . PHP_EOL);
+            $consoleOutput->write(1, $board);
 
             // Move to some direction
             $url = $state['playUrl'];
+
+            $turnStart = microtime(true);
             $direction = $bot->chooseNextMove($board, $game->getPlayer());
+            $decisionTime = microtime(true) - $turnStart;
 
             $state = $this->move($url, $direction);
 
-            printf("Turn %4d - Move: %5s" . PHP_EOL, $state['game']['turn'], $direction);
+            $lines = [
+                " " . $game->getPlayer() . PHP_EOL
+                    . sprintf("    - Move: %5s in %.3fms    ", $direction, $decisionTime * 1000) . PHP_EOL
+            ];
 
-            $game = Game::buildFromResponse($state, $tileFactory);
-            ob_flush();
+            foreach ($game->getEnemies() as $enemy) {
+                $lines[] = " " . $enemy . PHP_EOL;
+            }
+
+            $consoleOutput->write(2, implode(PHP_EOL, $lines));
+
+            $game = Game::buildFromVindiniumResponse($state, $tileFactory);
+            // ob_flush();
         }
-        echo PHP_EOL . PHP_EOL;
-        ob_end_clean();
+        // ob_end_clean();
     }
 
     private function getNewGameState()
     {
-        // Wait for 10 minutes
-        $response = HttpPost::post($this->server . $this->endPoint, $this->params, 30 * 60);
+        $response = HttpPost::post($this->server . $this->endPoint, $this->params, self::NEW_GAME_WAIT_TIMEOUT);
 
         if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
             return json_decode($response['content'], true);
@@ -120,7 +135,7 @@ class Client
          */
 
         try {
-            $response = HttpPost::post($url, array('dir' => $direction), self::TIMEOUT);
+            $response = HttpPost::post($url, array('dir' => $direction), self::GAME_WAIT_TIMEOUT);
             if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
                 return json_decode($response['content'], true);
             } else {
@@ -131,30 +146,5 @@ class Client
             echo $e->getMessage() . "\n";
             return array('game' => array('finished' => true));
         }
-    }
-
-    function cursorUp($n = 1)
-    {
-        $this->moveCursor($n, 'A');
-    }
-
-    function cursorDown($n = 1)
-    {
-        $this->moveCursor($n, 'B');
-    }
-
-    function cursorRight($n = 1)
-    {
-        $this->moveCursor($n, 'C');
-    }
-
-    function cursorLeft($n = 1)
-    {
-        $this->moveCursor($n, 'D');
-    }
-
-    function moveCursor($n, $d)
-    {
-        echo "\033[".$n.$d;
     }
 }
