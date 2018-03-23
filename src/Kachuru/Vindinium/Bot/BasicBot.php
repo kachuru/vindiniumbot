@@ -23,7 +23,7 @@ class BasicBot implements Bot
 //        if (empty($this->currentPath)) {
 //            $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);
 //        }
-        if ($player->getLife() < 60) {
+        if ($player->getLife() < 45) {
             $this->currentPath = array_slice($this->getPathToNearestTavern($board, $player), 1);
         } else {
             $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);

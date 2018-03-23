@@ -43,12 +43,11 @@ class PathFinder
         do {
             $nextMove = $this->getNextMove($openList);
 
-            $closedList[] = $nextMove;
-
             $openList = $this->removePositionFromList($openList, $nextMove);
 
             $newList = $this->scoreTiles($this->board->getAdjacentBoardTiles($nextMove->getPosition()), $nextMove);
 
+            $closedList[] = $nextMove;
             foreach ($closedList as $scoredBoardTile) {
                 $newList = $this->removePositionFromList($newList, $scoredBoardTile);
             }
