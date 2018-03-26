@@ -41,7 +41,7 @@ class Tile
 
     public function isWalkable(): bool
     {
-        return $this->type->isWalkable();
+        return ($this->type)::WALKABLE;
     }
 
     public function getBaseMoveCost(): int

@@ -18,11 +18,11 @@ class TileFactory
         $type = array_reduce(
             self::TILE_TYPES,
             function ($tile, $tileType) use ($content) {
+                $class = 'Kachuru\Vindinium\Game\Tile\\' . $tileType;
                 /**
                  * @var \Kachuru\Vindinium\Game\Tile\TileType $class
                  */
-                $class = 'Kachuru\Vindinium\Game\Tile\\' . $tileType;
-                if (preg_match($class::getPattern(), $content, $match)) {
+                if (preg_match($class::TILE_SPECIFICATION, $content, $match)) {
                     $tile = new Tile(
                         new $class(),
                         $content,
