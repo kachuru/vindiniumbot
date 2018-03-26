@@ -4,7 +4,7 @@ namespace Kachuru\Vindinium\Game;
 
 class Player
 {
-    const PLAYER_OUTPUT = '%s [%2d, %2d] - Life: %3d Gold: %3d Mines: %2d';
+    const PLAYER_OUTPUT = '[%d] %s [%2d, %2d] - Life:%3d Gold: %4d Mines: %2d';
 
     private $id;
     private $life;
@@ -52,7 +52,8 @@ class Player
     {
         return sprintf(
             self::PLAYER_OUTPUT,
-            str_pad($this->name, 20),
+            $this->id,
+            str_pad(substr($this->name, 0, 13), 13),
             $this->position->getX(),
             $this->position->getY(),
             $this->life,
