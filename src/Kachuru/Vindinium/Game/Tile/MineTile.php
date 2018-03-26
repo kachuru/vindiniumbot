@@ -7,6 +7,7 @@ class MineTile implements TileType
     public const TILE_SPECIFICATION = '/\$(?P<player>[1-4\-])/';
 
     const WALKABLE = false;
+    public const BASE_MOVE_COST = -1;
 
     public static function getPattern(): string
     {

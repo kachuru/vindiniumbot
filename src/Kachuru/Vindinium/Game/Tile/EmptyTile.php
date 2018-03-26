@@ -4,9 +4,9 @@ namespace Kachuru\Vindinium\Game\Tile;
 
 class EmptyTile implements TileType
 {
-    const TILE_SPECIFICATION = '/  /';
-
-    const WALKABLE = true;
+    public const TILE_SPECIFICATION = '/  /';
+    public const WALKABLE = true;
+    public const BASE_MOVE_COST = 1;
 
     public static function getPattern(): string
     {

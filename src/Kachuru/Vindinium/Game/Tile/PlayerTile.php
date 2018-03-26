@@ -6,6 +6,7 @@ class PlayerTile implements TileType
 {
     const TILE_SPECIFICATION = '/@(?P<player>[1-4])/';
     const WALKABLE = true;
+    const BASE_MOVE_COST = 5;
 
     public static function getPattern(): string
     {

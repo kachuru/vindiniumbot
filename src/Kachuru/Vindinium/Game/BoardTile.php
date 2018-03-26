@@ -35,6 +35,11 @@ class BoardTile
         return $this->tile->isWalkable();
     }
 
+    public function getBaseMoveCost(): int
+    {
+        return $this->tile->getBaseMoveCost();
+    }
+
     public function __toString(): string
     {
         return (string) $this->tile;

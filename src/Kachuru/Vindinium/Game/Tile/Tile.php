@@ -18,6 +18,11 @@ class Tile
         }
     }
 
+    public function __toString(): string
+    {
+        return $this->content;
+    }
+
     public function getType(): TileType
     {
         return $this->type;
@@ -39,8 +44,8 @@ class Tile
         return $this->type->isWalkable();
     }
 
-    public function __toString(): string
+    public function getBaseMoveCost(): int
     {
-        return $this->content;
+        return ($this->type)::BASE_MOVE_COST;
     }
 }

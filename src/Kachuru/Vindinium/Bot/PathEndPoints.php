@@ -45,7 +45,7 @@ class PathEndPoints
         return new ScoredBoardTile(
             $boardTile,
             new BoardTileScore(
-                is_null($parent) ? 0 : $parent->getMoveCost() + 1,
+                is_null($parent) ? 0 : $parent->getMoveCost() + $boardTile->getBaseMoveCost(),
                 $this->estimateCostToOrigin($boardTile)
             ),
             $parent
