@@ -5,7 +5,7 @@ namespace spec\Kachuru\Vindinium\Bot;
 use Kachuru\Vindinium\Bot\BasicBot;
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
-use Kachuru\Vindinium\Game\Player\Player;
+use Kachuru\Vindinium\Game\Player;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;

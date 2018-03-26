@@ -3,8 +3,7 @@
 namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\Board;
-use Kachuru\Vindinium\Game\Player\Player;
-use Kachuru\Vindinium\Game\Position;
+use Kachuru\Vindinium\Game\Player;
 
 interface Bot
 {

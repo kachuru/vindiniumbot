@@ -1,8 +1,6 @@
 <?php
 
-namespace Kachuru\Vindinium\Game\Player;
-
-use Kachuru\Vindinium\Game\Position;
+namespace Kachuru\Vindinium\Game;
 
 class Player
 {

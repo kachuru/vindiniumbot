@@ -2,8 +2,6 @@
 
 namespace Kachuru\Vindinium\Game;
 
-use Kachuru\Vindinium\Game\Player\Player;
-use Kachuru\Vindinium\Game\Player\PlayerPosition;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 
 class Game
