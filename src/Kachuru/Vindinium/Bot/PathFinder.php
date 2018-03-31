@@ -61,7 +61,6 @@ class PathFinder
 
     public function scoreTiles($tiles, ScoredBoardTile $parentTile = null): array
     {
-        // Need to check if the tile is walkable or the destination
         return array_reduce(
             $tiles,
             function ($boardTiles, BoardTile $boardTile) use ($parentTile) {

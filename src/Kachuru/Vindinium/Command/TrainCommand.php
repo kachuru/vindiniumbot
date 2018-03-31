@@ -3,7 +3,7 @@
 namespace Kachuru\Vindinium\Command;
 
 use Kachuru\Base\Command\Command;
-use Kachuru\Vindinium\Game\Client;
+use Kachuru\Vindinium\Client;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

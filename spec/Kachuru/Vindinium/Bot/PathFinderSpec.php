@@ -8,6 +8,10 @@ use Kachuru\Vindinium\Bot\PathFinder;
 use Kachuru\Vindinium\Bot\ScoredBoardTile;
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Hero\BaseHero;
+use Kachuru\Vindinium\Game\Hero\EnemyHero;
+use Kachuru\Vindinium\Game\Hero\Heroes;
+use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use PhpSpec\ObjectBehavior;
@@ -22,7 +26,7 @@ class PathFinderSpec extends ObjectBehavior
 {
     function it_scores_multiple_tiles()
     {
-        $board = new Board(new TileFactory(), 5, $this->getEmptyBoard());
+        $board = new Board($this->getTileFactory(), 5, $this->getEmptyBoard());
         $this->beConstructedWith(
             $board,
             PathEndPoints::buildFromBoard($board, new Position(0, 1), [new Position(4, 3)])
@@ -65,18 +69,18 @@ class PathFinderSpec extends ObjectBehavior
          *   C:  3, 2 => g=4, h=2, f=6
          *   D:  2, 3 => g=4, h=2, f=6
          */
-        $parentTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 2)), [3, 2]);
+        $parentTile = $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 3)), [1, 5], $destinationTile);
 
         /**
          * Reality is this isn't what would be checked at this point as the previous tile would probably
          * be in the closed list at this point
          */
-        $this->scoreTiles($board->getAdjacentBoardTiles(new Position(2, 2)), $parentTile)->shouldBeLike(
+        $this->scoreTiles($board->getAdjacentBoardTiles(new Position(3, 3)), $parentTile)->shouldBeLike(
             [
-                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 1)), [4, 2], $parentTile),
-                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(1, 2)), [4, 2], $parentTile),
-                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 2)), [4, 4], $parentTile),
-                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 3)), [4, 4], $parentTile),
+                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 2)), [2, 4], $parentTile),
+                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(2, 3)), [2, 4], $parentTile),
+                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(4, 3)), [2, 6], $parentTile),
+                $this->getScoredBoardTile($board->getBoardTileAtPosition(new Position(3, 4)), [2, 6], $parentTile),
             ]
         );
     }
@@ -86,7 +90,7 @@ class PathFinderSpec extends ObjectBehavior
         $origin = new Position(0, 1);
         $destination = new Position(4, 3);
 
-        $board = new Board(new TileFactory(), 5, $this->getEmptyBoard());
+        $board = new Board($this->getTileFactory(), 5, $this->getEmptyBoard());
         $this->beConstructedWith(
             $board,
             PathEndPoints::buildFromBoard($board, $origin, [$destination])
@@ -122,7 +126,7 @@ class PathFinderSpec extends ObjectBehavior
         $origin = new Position(0, 1);
         $destination = new Position(4, 3);
 
-        $board = new Board(new TileFactory(), 5, $this->getEmptyBoard());
+        $board = new Board($this->getTileFactory(), 5, $this->getEmptyBoard());
         $this->beConstructedWith(
             $board,
             PathEndPoints::buildFromBoard($board, $origin, [$destination])
@@ -155,7 +159,7 @@ class PathFinderSpec extends ObjectBehavior
         $origin = new Position(0, 1);
         $destination = new Position(4, 3);
 
-        $board = new Board(new TileFactory(), 5, $this->getBoardWithWall());
+        $board = new Board($this->getTileFactory(), 5, $this->getBoardWithWall());
         $this->beConstructedWith(
             $board,
             PathEndPoints::buildFromBoard($board, $origin, [$destination])
@@ -187,7 +191,7 @@ class PathFinderSpec extends ObjectBehavior
         $origin = new Position(0, 1);
         $destination = new Position(4, 3);
 
-        $board = new Board(new TileFactory(), 5, $this->getBoardWithDeadEnd());
+        $board = new Board($this->getTileFactory(), 5, $this->getBoardWithDeadEnd());
         $this->beConstructedWith(
             $board,
             PathEndPoints::buildFromBoard($board, $origin, [$destination])
@@ -211,7 +215,7 @@ class PathFinderSpec extends ObjectBehavior
         $origin = new Position(0, 1);
         $destinations = [new Position(4, 3), new Position(4, 1)];
 
-        $board = new Board(new TileFactory(), 5, $this->getBoardWithMultipleDestinations());
+        $board = new Board($this->getTileFactory(), 5, $this->getBoardWithMultipleDestinations());
         $this->beConstructedWith(
             $board,
             PathEndPoints::buildFromBoard($board, $origin, $destinations)
@@ -318,5 +322,17 @@ class PathFinderSpec extends ObjectBehavior
             . "          "
             . "        $-"
             . "          ";
+    }
+
+    private function getTileFactory()
+    {
+        return new TileFactory(
+            new Heroes([
+                new PlayerHero(new BaseHero(1, 'HeroOne', 100, 0, 0, new Position(0, 0))),
+                new EnemyHero(new BaseHero(2, 'HeroTwo', 100, 0, 0, new Position(4, 0))),
+                new EnemyHero(new BaseHero(3, 'HeroThree', 100, 0, 0, new Position(0, 4))),
+                new EnemyHero(new BaseHero(4, 'HeroFour', 100, 0, 0, new Position(4, 4)))
+            ])
+        );
     }
 }

@@ -5,11 +5,13 @@ namespace spec\Kachuru\Vindinium\Bot;
 use Kachuru\Vindinium\Bot\BasicBot;
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
-use Kachuru\Vindinium\Game\Player;
+use Kachuru\Vindinium\Game\Hero\BaseHero;
+use Kachuru\Vindinium\Game\Hero\EnemyHero;
+use Kachuru\Vindinium\Game\Hero\Heroes;
+use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
-use Kachuru\Vindinium\Game\Tile\Tile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -21,47 +23,65 @@ use Prophecy\Argument;
  */
 class BasicBotSpec extends ObjectBehavior
 {
+    private $heroes;
+    private $tileFactory;
+
+    public function let()
+    {
+        $this->heroes = new Heroes([
+            new PlayerHero(new BaseHero(1, 'HeroOne', 100, 0, 0, new Position(1, 1))),
+            new EnemyHero(new BaseHero(2, 'HeroTwo', 100, 0, 0, new Position(4, 0))),
+            new EnemyHero(new BaseHero(3, 'HeroThree', 100, 0, 0, new Position(0, 4))),
+            new EnemyHero(new BaseHero(4, 'HeroFour', 100, 0, 0, new Position(4, 4))),
+        ]);
+
+        $this->tileFactory = new TileFactory($this->heroes);
+    }
+
     public function it_finds_available_destinations()
     {
-        $this->beConstructedWith(new Player(1, 100, 0, 0, new Position(1, 1)));
-
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
 
         $this->getMinesNotOwnedByMe($board)->shouldBeLike(
             [
-                new BoardTile(new Tile(new MineTile(), '$-'), new Position(4, 1)),
-                new BoardTile(new Tile(new MineTile(), '$-'), new Position(0, 3)),
-                new BoardTile(new Tile(new MineTile(), '$2', 2), new Position(4, 3)),
+                new BoardTile(new Position(4, 1), new MineTile()),
+                new BoardTile(new Position(0, 3), new MineTile()),
+                new BoardTile(new Position(4, 3), new MineTile(), $this->heroes->getHero(2)),
             ]
         );
-
     }
 
     public function it_chooses_the_nearest_destination()
     {
-        $this->beConstructedWith(new Player(1, 100, 0, 0, new Position(2, 0)));
-
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
 
-        $this->getPathToNearestAvailableMine($board)->shouldBeLike(
+        $this->getPathToNearestAvailableMine($board, $this->heroes->getHero(1))->shouldBeLike(
             [
-                new BoardTile(new Tile(new EmptyTile(), '  '), new Position(2, 0)),
-                new BoardTile(new Tile(new EmptyTile(), '  '), new Position(2, 1)),
-                new BoardTile(new Tile(new EmptyTile(), '  '), new Position(3, 1)),
-                new BoardTile(new Tile(new MineTile(), '$-'), new Position(4, 1)),
+                new BoardTile(new Position(1, 2), new EmptyTile()),
+                new BoardTile(new Position(1, 3), new EmptyTile()),
+                new BoardTile(new Position(0, 3), new MineTile()),
             ]
         );
     }
 
     public function it_gets_move()
     {
-        $this->beConstructedWith(new Player(1, 100, 0, 0, new Position(2, 0)));
-
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
 
-        $this->chooseNextMove($board, new Position(2, 0))->shouldReturn('South');
-        $this->chooseNextMove($board, new Position(2, 1))->shouldReturn('East');
-        $this->chooseNextMove($board, new Position(3, 1))->shouldReturn('East');
+        /**
+         *     **
+         * $1  ****$-
+         *
+         * $-      $2
+         *
+         */
+
+        $this->chooseNextMove($board, new PlayerHero(new BaseHero(1, 'Random', 100, 0, 0, new Position(2, 0))))
+            ->shouldReturn('South');
+        $this->chooseNextMove($board, new PlayerHero(new BaseHero(1, 'Random', 100, 0, 0, new Position(2, 1))))
+            ->shouldReturn('East');
+        $this->chooseNextMove($board, new PlayerHero(new BaseHero(1, 'Random', 100, 0, 0, new Position(3, 1))))
+            ->shouldReturn('East');
     }
 
     private function getBoardWithMines()
@@ -75,10 +95,6 @@ class BasicBotSpec extends ObjectBehavior
 
     private function buildBoard(string $boardString, int $size)
     {
-        return new Board(
-            new TileFactory(),
-            $size,
-            $boardString
-        );
+        return new Board($this->tileFactory, $size, $boardString);
     }
 }

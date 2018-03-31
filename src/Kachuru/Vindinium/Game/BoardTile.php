@@ -2,22 +2,25 @@
 
 namespace Kachuru\Vindinium\Game;
 
-use Kachuru\Vindinium\Game\Tile\Tile;
+use Kachuru\Vindinium\Game\Hero\Hero;
+use Kachuru\Vindinium\Game\Tile\TileType;
 
 class BoardTile
 {
-    private $tile;
     private $position;
+    private $tileType;
+    private $hero;
 
-    public function __construct(Tile $tile, Position $position)
+    public function __construct(Position $position, TileType $tileType, Hero $hero = null)
     {
-        $this->tile = $tile;
         $this->position = $position;
+        $this->tileType = $tileType;
+        $this->hero = $hero;
     }
 
-    public function getTile(): Tile
+    public function __toString(): string
     {
-        return $this->tile;
+        return (string) sprintf(($this->tileType)::OUTPUT, is_null($this->hero) ? '-' : $this->hero->getId());
     }
 
     public function getPosition(): Position
@@ -25,23 +28,29 @@ class BoardTile
         return $this->position;
     }
 
-    public function getPlayer(): int
+    public function getTileType(): TileType
     {
-        return (int) $this->tile->getPlayer();
+        return $this->tileType;
+    }
+
+    public function getTypeName(): string
+    {
+        $class = get_class($this->tileType);
+        return substr($class, strrpos($class, '\\') + 1);
+    }
+
+    public function getHero(): ?Hero
+    {
+        return $this->hero;
     }
 
     public function isWalkable(): bool
     {
-        return $this->tile->isWalkable();
+        return ($this->tileType)::WALKABLE;
     }
 
-    public function getBaseMoveCost(): int
+    public function getBaseMoveCost(): ?int
     {
-        return $this->tile->getBaseMoveCost();
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->tile;
+        return ($this->tileType)::BASE_MOVE_COST;
     }
 }

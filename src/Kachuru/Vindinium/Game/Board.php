@@ -54,16 +54,6 @@ class Board
         ));
     }
 
-    public function getBoardTileAtPosition(Position $position): ?BoardTile
-    {
-        if (array_key_exists($position->getY(), $this->tiles)
-            && array_key_exists($position->getX(), $this->tiles[$position->getY()])) {
-            return $this->tiles[$position->getY()][$position->getX()];
-        }
-
-        return null;
-    }
-
     public function getMineTiles()
     {
         return $this->tileTypes['MineTile'];
@@ -72,6 +62,16 @@ class Board
     public function getTavernTiles()
     {
         return $this->tileTypes['TavernTile'];
+    }
+
+    public function getBoardTileAtPosition(Position $position): ?BoardTile
+    {
+        if (array_key_exists($position->getY(), $this->tiles)
+            && array_key_exists($position->getX(), $this->tiles[$position->getY()])) {
+            return $this->tiles[$position->getY()][$position->getX()];
+        }
+
+        return null;
     }
 
     /**
@@ -99,8 +99,8 @@ class Board
 
     private function buildTile(TileFactory $tileFactory, $tileString, $x, $y)
     {
-        $tile = new BoardTile($tileFactory->buildTile($tileString), new Position($x, $y));
-        $this->tileTypes[$tile->getTile()->getTypeName()][] = $tile;
+        $tile = $tileFactory->buildTile($tileString, new Position($x, $y));
+        $this->tileTypes[$tile->getTypeName()][] = $tile;
         return $tile;
     }
 }

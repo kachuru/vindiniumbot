@@ -2,33 +2,21 @@
 
 namespace Kachuru\Vindinium\Game;
 
+use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 
 class Game
 {
-    /**
-     * @var State
-     */
     private $state;
-    /**
-     * @var string
-     */
     private $id;
-    /**
-     * @var Board
-     */
     private $board;
-    /**
-     * @var Player
-     */
-    private $player;
-    /**
-     * @var array
-     */
-    private $enemies;
+    private $hero;
+    private $heroes;
 
-    public static function buildFromVindiniumResponse($state, TileFactory $tileFactory)
+    public static function buildFromVindiniumResponse($state)
     {
+        $heroes = Heroes::buildFromVindiniumResponse($state['game']['heroes'], $state['hero']['id']);
+
         return new self(
             (string) $state['game']['id'],
             new State(
@@ -36,24 +24,19 @@ class Game
                 (int) $state['game']['maxTurns'],
                 (bool) $state['game']['finished']
             ),
-            Board::buildFromVindiniumResponse($tileFactory, $state['game']['board']),
-            Player::buildFromVindiniumResponse($state['hero']),
-            Player::buildAllFromVindiniumResponse(
-                array_diff_key(
-                    $state['game']['heroes'],
-                    [$state['hero']['id'] - 1 => null]
-                )
-            )
+            Board::buildFromVindiniumResponse(new TileFactory($heroes), $state['game']['board']),
+            BaseHero::buildFromVindiniumResponse($state['hero']),
+            $heroes
         );
     }
 
-    private function __construct(string $id, State $state, Board $board, Player $player, array $enemies)
+    private function __construct(string $id, State $state, Board $board, BaseHero $hero, Heroes $heroes)
     {
         $this->state = $state;
         $this->id = $id;
         $this->board = $board;
-        $this->player = $player;
-        $this->enemies = $enemies;
+        $this->hero = $hero;
+        $this->heroes = $heroes;
     }
 
     public function getId(): string
@@ -71,14 +54,14 @@ class Game
         return $this->board;
     }
 
-    public function getPlayer(): Player
+    public function getHero(): BaseHero
     {
-        return $this->player;
+        return $this->hero;
     }
 
-    public function getEnemies(): array
+    public function getHeroes(): Heroes
     {
-        return $this->enemies;
+        return $this->heroes;
     }
 
     public function isFinished(): bool

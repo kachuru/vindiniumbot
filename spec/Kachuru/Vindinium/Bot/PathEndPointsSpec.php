@@ -8,7 +8,6 @@ use Kachuru\Vindinium\Bot\ScoredBoardTile;
 use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
-use Kachuru\Vindinium\Game\Tile\Tile;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -56,7 +55,7 @@ class PathEndPointsSpec extends ObjectBehavior
 
     private function getEmptyBoardTile(Position $position): BoardTile
     {
-        return new BoardTile(New Tile(new EmptyTile(), '  '), $position);
+        return new BoardTile($position, new EmptyTile());
     }
 
     private function getScoredBoardTile(

@@ -1,11 +1,11 @@
 <?php
 
-namespace Kachuru\Vindinium\Game;
+namespace Kachuru\Vindinium;
 
 use Kachuru\Util\ConsoleOutput;
 use Kachuru\Util\ConsoleWindow;
 use Kachuru\Vindinium\Bot\BasicBot;
-use Kachuru\Vindinium\Game\Tile\TileFactory;
+use Kachuru\Vindinium\Game\Game;
 
 class Client
 {
@@ -63,12 +63,10 @@ class Client
 
     private function run()
     {
-        $tileFactory = new TileFactory();
-
         // Get the initial state
         $state = $this->getNewGameState();
 
-        $game = Game::buildFromVindiniumResponse($state, $tileFactory);
+        $game = Game::buildFromVindiniumResponse($state);
 
         $boardSize = $state['game']['board']['size'];
 
@@ -93,23 +91,22 @@ class Client
             $url = $state['playUrl'];
 
             $turnStart = microtime(true);
-            $direction = $bot->chooseNextMove($board, $game->getPlayer());
+            $direction = $bot->chooseNextMove($board, $game->getHero());
             $decisionTime = microtime(true) - $turnStart;
 
             $state = $this->move($url, $direction);
 
-            $lines = [
-                " " . $game->getPlayer() . PHP_EOL
-                    . sprintf("    - Move: %5s in %.3fms    ", $direction, $decisionTime * 1000) . PHP_EOL
-            ];
-
-            foreach ($game->getEnemies() as $enemy) {
-                $lines[] = " " . $enemy . PHP_EOL;
+            $lines = [];
+            foreach ($game->getHeroes() as $hero) {
+                $lines[] = " " . $hero . PHP_EOL;
+                if ($hero->getId() == $game->getHero()->getId()) {
+                    $lines[] = sprintf("    - Move: %5s in %.3fms    ", $direction, $decisionTime * 1000) . PHP_EOL;
+                }
             }
 
             $consoleOutput->write(2, implode(PHP_EOL, $lines));
 
-            $game = Game::buildFromVindiniumResponse($state, $tileFactory);
+            $game = Game::buildFromVindiniumResponse($state);
             // ob_flush();
         }
         // ob_end_clean();

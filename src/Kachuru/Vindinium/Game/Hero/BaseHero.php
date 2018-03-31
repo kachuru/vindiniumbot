@@ -1,19 +1,21 @@
 <?php
 
-namespace Kachuru\Vindinium\Game;
+namespace Kachuru\Vindinium\Game\Hero;
 
-class Player
+use Kachuru\Vindinium\Game\Position;
+
+class BaseHero implements Hero
 {
-    const PLAYER_OUTPUT = '[%d] %s [%2d, %2d] - Life:%3d Gold: %4d Mines: %2d';
+    const HERO_OUTPUT = '[%d] %s [%2d, %2d] - Life:%3d Gold: %4d Mines: %2d';
 
     private $id;
+    private $name;
     private $life;
     private $gold;
     private $mineCount;
     private $position;
-    private $name;
 
-    public static function buildFromVindiniumResponse(array $response): Player
+    public static function buildFromVindiniumResponse(array $response): Hero
     {
         return new self(
             $response['id'],
@@ -29,15 +31,6 @@ class Player
         );
     }
 
-    public static function buildAllFromVindiniumResponse(array $players): array
-    {
-        foreach ($players as $i => $player) {
-            $players[$i] = self::buildFromVindiniumResponse($player);
-        }
-
-        return $players;
-    }
-
     public function __construct($id, $name, $life, $gold, $mineCount, Position $position)
     {
         $this->id = $id;
@@ -48,10 +41,10 @@ class Player
         $this->position = $position;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf(
-            self::PLAYER_OUTPUT,
+            self::HERO_OUTPUT,
             $this->id,
             str_pad(substr($this->name, 0, 13), 13),
             $this->position->getX(),
@@ -62,41 +55,31 @@ class Player
         );
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLife()
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getLife(): int
     {
         return $this->life;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getGold()
+    public function getGold(): int
     {
         return $this->gold;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMineCount()
+    public function getMineCount(): int
     {
         return $this->mineCount;
     }
 
-    /**
-     * @return Position
-     */
     public function getPosition(): Position
     {
         return $this->position;
