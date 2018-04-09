@@ -98,7 +98,7 @@ class Client
 
             $lines = [];
             foreach ($game->getHeroes() as $hero) {
-                $lines[] = " " . $hero . PHP_EOL;
+                $lines[] = " " . $hero;
                 if ($hero->getId() == $game->getHero()->getId()) {
                     $lines[] = sprintf("    - Move: %5s in %.3fms    ", $direction, $decisionTime * 1000) . PHP_EOL;
                 }

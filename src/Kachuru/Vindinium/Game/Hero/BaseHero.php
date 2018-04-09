@@ -15,7 +15,7 @@ class BaseHero implements Hero
     private $mineCount;
     private $position;
 
-    public static function buildFromVindiniumResponse(array $response): Hero
+    public static function buildFromVindiniumResponse(array $response)
     {
         return new self(
             $response['id'],

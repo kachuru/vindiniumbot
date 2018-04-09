@@ -3,6 +3,7 @@
 namespace Kachuru\Vindinium\Game;
 
 use Kachuru\Vindinium\Game\Hero\Heroes;
+use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 
 class Game
@@ -25,12 +26,12 @@ class Game
                 (bool) $state['game']['finished']
             ),
             Board::buildFromVindiniumResponse(new TileFactory($heroes), $state['game']['board']),
-            BaseHero::buildFromVindiniumResponse($state['hero']),
+            PlayerHero::buildFromVindiniumResponse($state['hero']),
             $heroes
         );
     }
 
-    private function __construct(string $id, State $state, Board $board, BaseHero $hero, Heroes $heroes)
+    private function __construct(string $id, State $state, Board $board, PlayerHero $hero, Heroes $heroes)
     {
         $this->state = $state;
         $this->id = $id;
@@ -54,7 +55,7 @@ class Game
         return $this->board;
     }
 
-    public function getHero(): BaseHero
+    public function getHero(): PlayerHero
     {
         return $this->hero;
     }

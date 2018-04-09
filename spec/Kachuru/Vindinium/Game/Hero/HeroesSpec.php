@@ -1,6 +1,6 @@
 <?php
 
-namespace spec\Kachuru\Vindinium\Game;
+namespace spec\Kachuru\Vindinium\Game\Hero;
 
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;

@@ -50,7 +50,7 @@ class BasicBot implements Bot
         return $this->getPathToNearestDestination(
             $board,
             $board->getBoardTileAtPosition($player->getPosition()),
-            $this->getMinesNotOwnedByMe($board, $player)
+            $this->getMinesNotOwnedByMe($board)
         );
     }
 

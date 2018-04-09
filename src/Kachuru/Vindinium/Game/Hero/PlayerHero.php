@@ -8,7 +8,7 @@ class PlayerHero implements Hero
 {
     private $hero;
 
-    public static function buildFromVindiniumResponse(array $response): Hero
+    public static function buildFromVindiniumResponse(array $response)
     {
         return new self(BaseHero::buildFromVindiniumResponse($response));
     }

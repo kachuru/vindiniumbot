@@ -2,9 +2,10 @@
 
 namespace Kachuru\Util;
 
-use IteratorIterator;
 
-class Collection extends IteratorIterator
+use ArrayIterator;
+
+class Collection extends ArrayIterator
 {
     private $items;
 
@@ -26,6 +27,7 @@ class Collection extends IteratorIterator
         );
 
         $this->items = $items;
+        parent::__construct($items);
     }
 
     public function findBy($call, $value)
