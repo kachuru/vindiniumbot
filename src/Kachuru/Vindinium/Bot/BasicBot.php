@@ -11,19 +11,18 @@ use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
 
 class BasicBot implements Bot
 {
+    const TAVERN_LIFE = 25;
+
     private $currentPath;
-    private $lastPosition;
+    private $previousPosition;
 
     // TO DO
-    // 1. Awareness of nearby tiles
-    // 2. Can you make it to the next mine?
-    // 4. If a bot is in the way, can you take it in a fight?
-    // 5. RUN AWAY
+    // 1. Affect adjacent square move costs.
     // 6. Configurable things
 
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {
-        if (!$this->validatePosition($player->getPosition()) || !$this->validatePath($player)) {
+        if (!$this->validatePosition($player->getPosition()) || !$this->validatePath($board, $player)) {
             $this->currentPath = null;
         }
 
@@ -36,7 +35,7 @@ class BasicBot implements Bot
 
     public function selectPath(Board $board, PlayerHero $player): array
     {
-        if ($player->getLife() < 45) {
+        if ($player->getLife() < self::TAVERN_LIFE) {
             $path = $this->getPathToNearestTavern($board, $player);
         } else {
             $path = $this->getPathToNearestAvailableMine($board, $player);
@@ -81,7 +80,7 @@ class BasicBot implements Bot
         ));
     }
 
-    private function validatePath(PlayerHero $player): bool
+    private function validatePath(Board $board, PlayerHero $player): bool
     {
         if (!empty($this->currentPath)) {
             // Ensure we have enough life to take the mine
@@ -93,11 +92,18 @@ class BasicBot implements Bot
                 /**
                  * @var BoardTile $boardTile
                  */
-                // This doesn't work because you need to check if any of the adjacent tiles contain an enemy player too
-                if ($boardTile->getTileType() instanceof EnemyHeroTile) {
-                    // Cowardly run away
-                    // - work out if you can beat it in a fight
-                    return false;
+
+                $checkTiles = [$boardTile];
+                if (!$this->isDestination($boardTile)) {
+                    $checkTiles = array_merge($checkTiles, $board->getAdjacentBoardTiles($boardTile->getPosition()));
+                }
+
+                foreach ($checkTiles as $tile) {
+                    // This doesn't work because you need to check if any of the adjacent tiles contain an enemy player too
+                    if ($tile->getTileType() instanceof EnemyHeroTile
+                        && $tile->getHero()->getLife() < $player->getLife()) {
+                        return false;
+                    }
                 }
             }
         }
@@ -107,7 +113,19 @@ class BasicBot implements Bot
 
     private function validatePosition(Position $position): bool
     {
-        return isset($this->lastPosition) && $this->lastPosition == $position;
+        return isset($this->previousPosition) && $this->previousPosition == $position;
+    }
+
+    private function isDestination($boardTile)
+    {
+        return $this->getDestination() == $boardTile;
+    }
+
+    private function getDestination(): ?BoardTile
+    {
+        if (!empty($this->currentPath)) {
+            return end($this->currentPath);
+        }
     }
 
     private function getNextMove(Position $playerPosition)
@@ -116,28 +134,29 @@ class BasicBot implements Bot
             return 'Stay';
         }
 
-        // $playerPosition = $this->player->getPosition();
         $nextTile = array_shift($this->currentPath);
         $nextPosition = $nextTile->getPosition();
 
-        $this->lastPosition = $nextPosition;
+        $move = 'Stay';
 
         if ($playerPosition->getX() > $nextPosition->getX()) {
-            return 'West';
+            $move = 'West';
         }
 
         if ($playerPosition->getY() > $nextPosition->getY()) {
-            return 'North';
+            $move = 'North';
         }
 
         if ($playerPosition->getY() < $nextPosition->getY()) {
-            return 'South';
+            $move = 'South';
         }
 
         if ($playerPosition->getX() < $nextPosition->getX()) {
-            return 'East';
+            $move = 'East';
         }
 
-        return 'Stay';
+        $this->previousPosition = $nextPosition;
+
+        return $move;
     }
 }
