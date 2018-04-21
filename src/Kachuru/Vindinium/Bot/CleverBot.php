@@ -9,7 +9,7 @@ use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
 
-class BasicBot implements Bot
+class CleverBot implements Bot
 {
     const TAVERN_LIFE = 25;
 
