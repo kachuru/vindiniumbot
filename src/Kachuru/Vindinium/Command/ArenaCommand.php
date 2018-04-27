@@ -3,6 +3,8 @@
 namespace Kachuru\Vindinium\Command;
 
 use Kachuru\Base\Command\Command;
+use Kachuru\Vindinium\Bot\BasicBot;
+use Kachuru\Vindinium\Bot\CleverBot;
 use Kachuru\Vindinium\Client;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -22,11 +24,16 @@ class ArenaCommand extends Command
     {
         $this->setName('arena');
         $this->setDescription('Run the bot in arena mode');
+        $this->addOption('bot', 'b', InputOption::VALUE_OPTIONAL, 'Bot scheme to use', 'clever');
         $this->addOption('games', 'g', InputOption::VALUE_OPTIONAL, 'Number of games to run for', 1);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->client->startArena($input->getOption('games'));
+        $bot = $input->getOption('bot') == 'basic'
+            ? new BasicBot()
+            : new CleverBot();
+
+        $this->client->startArena($bot, $input->getOption('games'));
     }
 }

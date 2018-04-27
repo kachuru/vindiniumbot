@@ -11,7 +11,7 @@ use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
 
 class CleverBot implements Bot
 {
-    const TAVERN_LIFE = 25;
+    const TAVERN_LIFE = 35;
 
     private $currentPath;
     private $previousPosition;
@@ -19,6 +19,11 @@ class CleverBot implements Bot
     // TO DO
     // 1. Affect adjacent square move costs.
     // 6. Configurable things
+
+    public function getHandle(): string
+    {
+        return 'clever';
+    }
 
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {

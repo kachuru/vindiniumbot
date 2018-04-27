@@ -4,7 +4,7 @@ namespace Kachuru\Vindinium;
 
 use Kachuru\Util\ConsoleOutput;
 use Kachuru\Util\ConsoleWindow;
-use Kachuru\Vindinium\Bot\BasicBot;
+use Kachuru\Vindinium\Bot\Bot;
 use Kachuru\Vindinium\Game\Game;
 
 class Client
@@ -16,6 +16,10 @@ class Client
     private $server;
     private $endPoint;
     private $params = [];
+    /**
+     * @var Bot
+     */
+    private $bot;
 
     public function __construct($server, $key)
     {
@@ -23,7 +27,7 @@ class Client
         $this->key = $key;
     }
 
-    public function startTraining($turns = 300, $map = null)
+    public function startTraining(Bot $bot, $turns = 300, $map = null)
     {
         $this->endPoint = '/api/training';
         $this->params = [
@@ -35,6 +39,8 @@ class Client
             $this->params['map'] = 'm' . $map;
         }
 
+        $this->bot = $bot;
+
         echo "Starting training mode" . PHP_EOL;
 
         $this->run();
@@ -42,12 +48,14 @@ class Client
         echo "Finished" . PHP_EOL;
     }
 
-    public function startArena($games = 1)
+    public function startArena(Bot $bot, $games = 1)
     {
         $this->endPoint = '/api/arena';
         $this->params = [
             'key' => $this->key
         ];
+
+        $this->bot = $bot;
 
         echo "Starting arena mode" . PHP_EOL;
 
@@ -78,11 +86,17 @@ class Client
             ]
         ))->prepare();
 
-        $bot = new BasicBot();
-
         // ob_start();
         while (!$game->isFinished()) {
-            $consoleOutput->write(0, sprintf(' Game: %s - Turn: %d', $state['viewUrl'], $state['game']['turn']));
+            $consoleOutput->write(
+                0,
+                sprintf(
+                    ' Game: %s - Turn: %d    Bot: %s',
+                    $state['viewUrl'],
+                    $state['game']['turn'],
+                    $this->bot->getHandle()
+                )
+            );
 
             $board = $game->getBoard();
             $consoleOutput->write(1, $board);
@@ -91,7 +105,7 @@ class Client
             $url = $state['playUrl'];
 
             $turnStart = microtime(true);
-            $direction = $bot->chooseNextMove($board, $game->getHero());
+            $direction = $this->bot->chooseNextMove($board, $game->getHero());
             $decisionTime = microtime(true) - $turnStart;
 
             $state = $this->move($url, $direction);

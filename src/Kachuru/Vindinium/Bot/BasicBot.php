@@ -4,26 +4,23 @@ namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
-use Kachuru\Vindinium\Game\Player\Player;
+use Kachuru\Vindinium\Game\Hero\PlayerHero as Player;
 use Kachuru\Vindinium\Game\Position;
 
 class BasicBot implements Bot
 {
+    const TAVERN_LIFE = 35;
+
     private $currentPath;
 
-    public function __construct()
+    public function getHandle(): string
     {
+        return 'basic';
     }
 
     public function chooseNextMove(Board $board, Player $player): string
     {
-        /**
-         * Have to disable this as there is no way to check whether the current path is still valid
-         */
-//        if (empty($this->currentPath)) {
-//            $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);
-//        }
-        if ($player->getLife() < 45) {
+        if ($player->getLife() < self::TAVERN_LIFE) {
             $this->currentPath = array_slice($this->getPathToNearestTavern($board, $player), 1);
         } else {
             $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);
@@ -59,7 +56,7 @@ class BasicBot implements Bot
         return array_values(array_filter(
             $board->getMineTiles(),
             function (BoardTile $boardTile) use ($player) {
-                return $boardTile->getPlayer() != $player->getId();
+                return $boardTile->getHero() != $player->getId();
             }
         ));
     }
@@ -70,7 +67,6 @@ class BasicBot implements Bot
             return 'Stay';
         }
 
-        // $playerPosition = $this->player->getPosition();
         $nextTile = array_shift($this->currentPath);
         $nextPosition = $nextTile->getPosition();
 
