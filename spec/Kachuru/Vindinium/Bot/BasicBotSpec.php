@@ -3,6 +3,7 @@
 namespace spec\Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Bot\BasicBot;
+use Kachuru\Vindinium\Bot\BotHelper;
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
@@ -36,6 +37,8 @@ class BasicBotSpec extends ObjectBehavior
         ]);
 
         $this->tileFactory = new TileFactory($this->heroes);
+
+        $this->beConstructedWith(new BotHelper());
     }
 
     public function it_finds_available_destinations()
