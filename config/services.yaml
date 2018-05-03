@@ -10,3 +10,12 @@ services:
     arguments:
       - "%vindinium.server%"
       - "%vindinium.key%"
+
+  Kachuru\Vindinium\Bot\BotFactory:
+    calls:
+      - method: addBot
+        arguments:
+          - '@Kachuru\Vindinium\Bot\BasicBot'
+      - method: addBot
+        arguments:
+          - '@Kachuru\Vindinium\Bot\CleverBot'
