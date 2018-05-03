@@ -25,6 +25,11 @@ class CleverBot implements Bot
         return 'clever';
     }
 
+    public function getName(): string
+    {
+        return 'CleverBot';
+    }
+
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {
         if (!$this->validatePosition($player->getPosition()) || !$this->validatePath($board, $player)) {

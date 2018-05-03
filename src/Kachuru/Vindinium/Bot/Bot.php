@@ -8,5 +8,6 @@ use Kachuru\Vindinium\Game\Hero\PlayerHero;
 interface Bot
 {
     public function getHandle(): string;
+    public function getName(): string;
     public function chooseNextMove(Board $board, PlayerHero $player): string;
 }

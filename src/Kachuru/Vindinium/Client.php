@@ -16,9 +16,6 @@ class Client
     private $server;
     private $endPoint;
     private $params = [];
-    /**
-     * @var Bot
-     */
     private $bot;
 
     public function __construct($server, $key)
@@ -94,7 +91,7 @@ class Client
                     ' Game: %s - Turn: %d    Bot: %s',
                     $state['viewUrl'],
                     $state['game']['turn'],
-                    $this->bot->getHandle()
+                    $this->bot->getName()
                 )
             );
 

@@ -18,6 +18,11 @@ class BasicBot implements Bot
         return 'basic';
     }
 
+    public function getName(): string
+    {
+        return 'BasicBot';
+    }
+
     public function chooseNextMove(Board $board, Player $player): string
     {
         if ($player->getLife() < self::TAVERN_LIFE) {
