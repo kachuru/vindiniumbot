@@ -7,6 +7,13 @@ use Kachuru\Vindinium\Game\Hero\PlayerHero;
 
 class AimlessBot implements Bot
 {
+    private $botHelper;
+
+    public function __construct(BotHelper $botHelper)
+    {
+        $this->botHelper = $botHelper;
+    }
+
     public function getHandle(): string
     {
         return 'aimless';
@@ -19,8 +26,6 @@ class AimlessBot implements Bot
 
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {
-        $directions = ['Stay', 'North', 'East', 'South', 'West'];
-
-        return $directions[mt_rand(0, count($directions) - 1)];
+        return $this->botHelper->getRandomDirection();
     }
 }

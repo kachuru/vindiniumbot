@@ -12,6 +12,12 @@ class BasicBot implements Bot
     const TAVERN_LIFE = 35;
 
     private $currentPath;
+    private $botHelper;
+
+    public function __construct(BotHelper $botHelper)
+    {
+        $this->botHelper = $botHelper;
+    }
 
     public function getHandle(): string
     {
@@ -31,7 +37,14 @@ class BasicBot implements Bot
             $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);
         }
 
-        return $this->getNextMove($player->getPosition());
+        if (empty($this->currentPath)) {
+            return BotHelper::DIRECTION_STAY;
+        }
+
+        return $this->botHelper->getRelativeDirection(
+            $player->getPosition(),
+            array_shift($this->currentPath)->getPosition()
+        );
     }
 
     public function getPathToNearestAvailableMine(Board $board, Player $player): array
@@ -64,33 +77,5 @@ class BasicBot implements Bot
                 return $boardTile->getHero() != $player->getId();
             }
         ));
-    }
-
-    private function getNextMove(Position $playerPosition)
-    {
-        if (empty($this->currentPath)) {
-            return 'Stay';
-        }
-
-        $nextTile = array_shift($this->currentPath);
-        $nextPosition = $nextTile->getPosition();
-
-        if ($playerPosition->getX() > $nextPosition->getX()) {
-            return 'West';
-        }
-
-        if ($playerPosition->getY() > $nextPosition->getY()) {
-            return 'North';
-        }
-
-        if ($playerPosition->getY() < $nextPosition->getY()) {
-            return 'South';
-        }
-
-        if ($playerPosition->getX() < $nextPosition->getX()) {
-            return 'East';
-        }
-
-        return 'Stay';
     }
 }

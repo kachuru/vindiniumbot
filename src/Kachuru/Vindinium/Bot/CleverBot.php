@@ -15,6 +15,15 @@ class CleverBot implements Bot
 
     private $currentPath;
     private $previousPosition;
+    /**
+     * @var BotHelper
+     */
+    private $botHelper;
+
+    public function __construct(BotHelper $botHelper)
+    {
+        $this->botHelper = $botHelper;
+    }
 
     // TO DO
     // 1. Affect adjacent square move costs.
@@ -40,7 +49,14 @@ class CleverBot implements Bot
             $this->currentPath = $this->selectPath($board, $player);
         }
 
-        return $this->getNextMove($player->getPosition());
+        if (empty($this->currentPath)) {
+            return BotHelper::DIRECTION_STAY;
+        }
+
+        return $this->botHelper->getRelativeDirection(
+            $player->getPosition(),
+            array_shift($this->currentPath)->getPosition()
+        );
     }
 
     public function selectPath(Board $board, PlayerHero $player): array
@@ -109,7 +125,6 @@ class CleverBot implements Bot
                 }
 
                 foreach ($checkTiles as $tile) {
-                    // This doesn't work because you need to check if any of the adjacent tiles contain an enemy player too
                     if ($tile->getTileType() instanceof EnemyHeroTile
                         && $tile->getHero()->getLife() < $player->getLife()) {
                         return false;
@@ -136,37 +151,5 @@ class CleverBot implements Bot
         if (!empty($this->currentPath)) {
             return end($this->currentPath);
         }
-    }
-
-    private function getNextMove(Position $playerPosition)
-    {
-        if (empty($this->currentPath)) {
-            return 'Stay';
-        }
-
-        $nextTile = array_shift($this->currentPath);
-        $nextPosition = $nextTile->getPosition();
-
-        $move = 'Stay';
-
-        if ($playerPosition->getX() > $nextPosition->getX()) {
-            $move = 'West';
-        }
-
-        if ($playerPosition->getY() > $nextPosition->getY()) {
-            $move = 'North';
-        }
-
-        if ($playerPosition->getY() < $nextPosition->getY()) {
-            $move = 'South';
-        }
-
-        if ($playerPosition->getX() < $nextPosition->getX()) {
-            $move = 'East';
-        }
-
-        $this->previousPosition = $nextPosition;
-
-        return $move;
     }
 }
