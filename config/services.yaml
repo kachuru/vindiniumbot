@@ -15,6 +15,9 @@ services:
     calls:
       - method: addBot
         arguments:
+          - '@Kachuru\Vindinium\Bot\RandomBot'
+      - method: addBot
+        arguments:
           - '@Kachuru\Vindinium\Bot\BasicBot'
       - method: addBot
         arguments:
