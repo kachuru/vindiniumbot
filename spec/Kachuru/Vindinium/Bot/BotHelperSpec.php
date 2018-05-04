@@ -10,6 +10,7 @@ use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
+use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use PhpSpec\ObjectBehavior;
@@ -41,6 +42,19 @@ class BotHelperSpec extends ObjectBehavior
         $this->getRelativeDirection($from, new Position(3, 2))->shouldReturn(BotHelper::DIRECTION_EAST);
         $this->getRelativeDirection($from, new Position(2, 3))->shouldReturn(BotHelper::DIRECTION_SOUTH);
         $this->getRelativeDirection($from, new Position(1, 2))->shouldReturn(BotHelper::DIRECTION_WEST);
+    }
+
+    public function it_chooses_the_nearest_available_mine()
+    {
+        $board = $this->buildBoard($this->getBoardWithMines(), 5);
+
+        $this->getPathToNearestAvailableMine($board, $this->heroes->getHero(1))->shouldBeLike(
+            [
+                new BoardTile(new Position(1, 2), new EmptyTile()),
+                new BoardTile(new Position(1, 3), new EmptyTile()),
+                new BoardTile(new Position(0, 3), new MineTile()),
+            ]
+        );
     }
 
     public function it_finds_mines_not_owned_by_player()

@@ -3,9 +3,7 @@
 namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\Board;
-use Kachuru\Vindinium\Game\BoardTile;
-use Kachuru\Vindinium\Game\Hero\PlayerHero as Player;
-use Kachuru\Vindinium\Game\Position;
+use Kachuru\Vindinium\Game\Hero\PlayerHero;
 
 class BasicBot implements Bot
 {
@@ -29,12 +27,12 @@ class BasicBot implements Bot
         return 'BasicBot';
     }
 
-    public function chooseNextMove(Board $board, Player $player): string
+    public function chooseNextMove(Board $board, PlayerHero $player): string
     {
         if ($player->getLife() < self::TAVERN_LIFE) {
-            $this->currentPath = array_slice($this->getPathToNearestTavern($board, $player), 1);
+            $this->currentPath = $this->botHelper->getPathToNearestTavern($board, $player);
         } else {
-            $this->currentPath = array_slice($this->getPathToNearestAvailableMine($board, $player), 1);
+            $this->currentPath = $this->botHelper->getPathToNearestAvailableMine($board, $player);
         }
 
         if (empty($this->currentPath)) {
@@ -45,27 +43,5 @@ class BasicBot implements Bot
             $player->getPosition(),
             array_shift($this->currentPath)->getPosition()
         );
-    }
-
-    public function getPathToNearestAvailableMine(Board $board, Player $player): array
-    {
-        return (new PathFinder(
-            $board,
-            new PathEndPoints(
-                $board->getBoardTileAtPosition($player->getPosition()),
-                $this->botHelper->getMinesNotOwnedByPlayerHero($board)
-            )
-        ))->find();
-    }
-
-    public function getPathToNearestTavern(Board $board, Player $player): array
-    {
-        return (new PathFinder(
-            $board,
-            new PathEndPoints(
-                $board->getBoardTileAtPosition($player->getPosition()),
-                $board->getTavernTiles()
-            )
-        ))->find();
     }
 }

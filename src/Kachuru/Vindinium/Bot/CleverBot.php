@@ -4,7 +4,6 @@ namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
-use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
@@ -62,38 +61,12 @@ class CleverBot implements Bot
     public function selectPath(Board $board, PlayerHero $player): array
     {
         if ($player->getLife() < self::TAVERN_LIFE) {
-            $path = $this->getPathToNearestTavern($board, $player);
+            $path = $this->botHelper->getPathToNearestTavern($board, $player);
         } else {
-            $path = $this->getPathToNearestAvailableMine($board, $player);
+            $path = $this->botHelper->getPathToNearestAvailableMine($board, $player);
         }
 
         return $path;
-    }
-
-    public function getPathToNearestAvailableMine(Board $board, PlayerHero $player): array
-    {
-        return $this->getPathToNearestDestination(
-            $board,
-            $board->getBoardTileAtPosition($player->getPosition()),
-            $this->botHelper->getMinesNotOwnedByPlayerHero($board)
-        );
-    }
-
-    public function getPathToNearestTavern(Board $board, PlayerHero $player): array
-    {
-        return $this->getPathToNearestDestination(
-            $board,
-            $board->getBoardTileAtPosition($player->getPosition()),
-            $board->getTavernTiles()
-        );
-    }
-
-    private function getPathToNearestDestination(Board $board, $origin, $destinations): array
-    {
-        return array_slice(
-            (new PathFinder($board, new PathEndPoints($origin, $destinations)))->find(),
-            1
-        );
     }
 
     private function validatePath(Board $board, PlayerHero $player): bool

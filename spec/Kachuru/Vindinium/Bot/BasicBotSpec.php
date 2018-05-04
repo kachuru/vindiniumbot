@@ -38,19 +38,6 @@ class BasicBotSpec extends ObjectBehavior
         $this->beConstructedWith(new BotHelper());
     }
 
-    public function it_chooses_the_nearest_available_mine()
-    {
-        $board = $this->buildBoard($this->getBoardWithMines(), 5);
-
-        $this->getPathToNearestAvailableMine($board, $this->heroes->getHero(1))->shouldBeLike(
-            [
-                new BoardTile(new Position(1, 2), new EmptyTile()),
-                new BoardTile(new Position(1, 3), new EmptyTile()),
-                new BoardTile(new Position(0, 3), new MineTile()),
-            ]
-        );
-    }
-
     public function it_gets_move()
     {
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
