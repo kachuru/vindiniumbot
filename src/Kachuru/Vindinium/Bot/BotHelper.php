@@ -2,6 +2,9 @@
 
 namespace Kachuru\Vindinium\Bot;
 
+use Kachuru\Vindinium\Game\Board;
+use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Position;
 
 class BotHelper
@@ -23,6 +26,16 @@ class BotHelper
     public function getRandomDirection(): string
     {
         return self::DIRECTIONS[mt_rand(0, count(self::DIRECTIONS) - 1)];
+    }
+
+    public function getMinesNotOwnedByPlayerHero(Board $board): array
+    {
+        return array_values(array_filter(
+            $board->getMineTiles(),
+            function (BoardTile $boardTile) {
+                return is_null($boardTile->getHero()) || $boardTile->getHero() instanceof EnemyHero;
+            }
+        ));
     }
 
     public function getRelativeDirection(Position $from, Position $to): string

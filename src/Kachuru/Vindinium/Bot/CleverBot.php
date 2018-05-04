@@ -75,7 +75,7 @@ class CleverBot implements Bot
         return $this->getPathToNearestDestination(
             $board,
             $board->getBoardTileAtPosition($player->getPosition()),
-            $this->getMinesNotOwnedByMe($board)
+            $this->botHelper->getMinesNotOwnedByPlayerHero($board)
         );
     }
 
@@ -94,16 +94,6 @@ class CleverBot implements Bot
             (new PathFinder($board, new PathEndPoints($origin, $destinations)))->find(),
             1
         );
-    }
-
-    public function getMinesNotOwnedByMe(Board $board): array
-    {
-        return array_values(array_filter(
-            $board->getMineTiles(),
-            function (BoardTile $boardTile) {
-                return is_null($boardTile->getHero()) || $boardTile->getHero() instanceof EnemyHero;
-            }
-        ));
     }
 
     private function validatePath(Board $board, PlayerHero $player): bool

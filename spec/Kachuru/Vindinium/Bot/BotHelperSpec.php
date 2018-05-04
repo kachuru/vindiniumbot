@@ -2,7 +2,6 @@
 
 namespace spec\Kachuru\Vindinium\Bot;
 
-use Kachuru\Vindinium\Bot\BasicBot;
 use Kachuru\Vindinium\Bot\BotHelper;
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\BoardTile;
@@ -11,19 +10,16 @@ use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
-use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-/**
- * Class BasicBotSpec
- * @mixin BasicBot
- * @package spec\Kachuru\Vindinium\Bot
- */
-class BasicBotSpec extends ObjectBehavior
+class BotHelperSpec extends ObjectBehavior
 {
+    /**
+     * @var Heroes
+     */
     private $heroes;
 
     public function let()
@@ -34,41 +30,19 @@ class BasicBotSpec extends ObjectBehavior
             new EnemyHero(new BaseHero(3, 'HeroThree', 100, 0, 0, new Position(0, 4))),
             new EnemyHero(new BaseHero(4, 'HeroFour', 100, 0, 0, new Position(4, 4))),
         ]);
-
-        $this->beConstructedWith(new BotHelper());
     }
 
-    public function it_chooses_the_nearest_available_mine()
+    public function it_finds_mines_not_owned_by_player()
     {
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
 
-        $this->getPathToNearestAvailableMine($board, $this->heroes->getHero(1))->shouldBeLike(
+        $this->getMinesNotOwnedByPlayerHero($board)->shouldBeLike(
             [
-                new BoardTile(new Position(1, 2), new EmptyTile()),
-                new BoardTile(new Position(1, 3), new EmptyTile()),
+                new BoardTile(new Position(4, 1), new MineTile()),
                 new BoardTile(new Position(0, 3), new MineTile()),
+                new BoardTile(new Position(4, 3), new MineTile(), $this->heroes->getHero(2)),
             ]
         );
-    }
-
-    public function it_gets_move()
-    {
-        $board = $this->buildBoard($this->getBoardWithMines(), 5);
-
-        /**
-         *     **
-         * $1  ****$-
-         *
-         * $-      $2
-         *
-         */
-
-        $this->chooseNextMove($board, new PlayerHero(new BaseHero(1, 'Random', 100, 0, 0, new Position(2, 0))))
-            ->shouldReturn('South');
-        $this->chooseNextMove($board, new PlayerHero(new BaseHero(1, 'Random', 100, 0, 0, new Position(2, 1))))
-            ->shouldReturn('East');
-        $this->chooseNextMove($board, new PlayerHero(new BaseHero(1, 'Random', 100, 0, 0, new Position(3, 1))))
-            ->shouldReturn('East');
     }
 
     private function getBoardWithMines()
@@ -79,6 +53,7 @@ class BasicBotSpec extends ObjectBehavior
             . "$-      $2"
             . "          ";
     }
+
 
     private function buildBoard(string $boardString, int $size)
     {

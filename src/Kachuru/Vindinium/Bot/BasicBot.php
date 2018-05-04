@@ -53,7 +53,7 @@ class BasicBot implements Bot
             $board,
             new PathEndPoints(
                 $board->getBoardTileAtPosition($player->getPosition()),
-                $this->getMinesNotOwnedByMe($board, $player)
+                $this->botHelper->getMinesNotOwnedByPlayerHero($board)
             )
         ))->find();
     }
@@ -67,15 +67,5 @@ class BasicBot implements Bot
                 $board->getTavernTiles()
             )
         ))->find();
-    }
-
-    public function getMinesNotOwnedByMe(Board $board, Player $player): array
-    {
-        return array_values(array_filter(
-            $board->getMineTiles(),
-            function (BoardTile $boardTile) use ($player) {
-                return $boardTile->getHero() != $player->getId();
-            }
-        ));
     }
 }
