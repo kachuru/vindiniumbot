@@ -23,9 +23,30 @@ class BotHelper
         self::DIRECTION_WEST
     ];
 
+    const COORD_DIRECTIONS = [
+        -1 => [
+            0 => self::DIRECTION_EAST
+        ],
+        0 => [
+            -1 => self::DIRECTION_SOUTH,
+            0 => self::DIRECTION_STAY,
+            1 => self::DIRECTION_NORTH,
+        ],
+        1 => [
+            0 => self::DIRECTION_WEST
+        ]
+    ];
+
     public function getRandomDirection(): string
     {
         return self::DIRECTIONS[mt_rand(0, count(self::DIRECTIONS) - 1)];
+    }
+
+    public function getRelativeDirection(Position $from, Position $to): string
+    {
+        return self::COORD_DIRECTIONS
+            [$this->getVector($from->getX(), $to->getX())]
+            [$this->getVector($from->getY(), $to->getY())];
     }
 
     public function getMinesNotOwnedByPlayerHero(Board $board): array
@@ -38,24 +59,14 @@ class BotHelper
         ));
     }
 
-    public function getRelativeDirection(Position $from, Position $to): string
+    private function getVector($from, $to)
     {
-        if ($from->getX() > $to->getX()) {
-            return self::DIRECTION_WEST;
+        $vector = $from - $to;
+        
+        if ($vector != 0) {
+            $vector = $vector / abs($vector);
         }
 
-        if ($from->getY() > $to->getY()) {
-            return self::DIRECTION_NORTH;
-        }
-
-        if ($from->getY() < $to->getY()) {
-            return self::DIRECTION_SOUTH;
-        }
-
-        if ($from->getX() < $to->getX()) {
-            return self::DIRECTION_EAST;
-        }
-
-        return self::DIRECTION_STAY;
+        return $vector;
     }
 }

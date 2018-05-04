@@ -32,6 +32,17 @@ class BotHelperSpec extends ObjectBehavior
         ]);
     }
 
+    public function it_returns_the_relative_direction()
+    {
+        $from = new Position(2, 2);
+
+        $this->getRelativeDirection($from, $from)->shouldReturn(BotHelper::DIRECTION_STAY);
+        $this->getRelativeDirection($from, new Position(2, 1))->shouldReturn(BotHelper::DIRECTION_NORTH);
+        $this->getRelativeDirection($from, new Position(3, 2))->shouldReturn(BotHelper::DIRECTION_EAST);
+        $this->getRelativeDirection($from, new Position(2, 3))->shouldReturn(BotHelper::DIRECTION_SOUTH);
+        $this->getRelativeDirection($from, new Position(1, 2))->shouldReturn(BotHelper::DIRECTION_WEST);
+    }
+
     public function it_finds_mines_not_owned_by_player()
     {
         $board = $this->buildBoard($this->getBoardWithMines(), 5);
