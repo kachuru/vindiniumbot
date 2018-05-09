@@ -7,6 +7,7 @@ use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
+use Kachuru\Vindinium\Game\Tile\MineTile;
 
 class CleverBot implements Bot
 {
@@ -73,7 +74,7 @@ class CleverBot implements Bot
     {
         if (!empty($this->currentPath)) {
             // Ensure we have enough life to take the mine
-            if ($player->getLife() < count($this->currentPath) + 21) {
+            if ($this->destinationIsAMine() && !$this->enoughLifeToCaptureMine($player)) {
                 return false;
             }
 
@@ -114,5 +115,15 @@ class CleverBot implements Bot
         if (!empty($this->currentPath)) {
             return end($this->currentPath);
         }
+    }
+
+    private function destinationIsAMine(): bool
+    {
+        return $this->getDestination()->getTileType() instanceOf MineTile;
+    }
+
+    private function enoughLifeToCaptureMine(PlayerHero $player): bool
+    {
+        return $player->getLife() < (count($this->currentPath) + 21);
     }
 }
