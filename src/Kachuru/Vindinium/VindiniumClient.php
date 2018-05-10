@@ -2,12 +2,13 @@
 
 namespace Kachuru\Vindinium;
 
+use GuzzleHttp\Client as HttpClient;
 use Kachuru\Util\ConsoleOutput;
 use Kachuru\Util\ConsoleWindow;
 use Kachuru\Vindinium\Bot\Bot;
 use Kachuru\Vindinium\Game\Game;
 
-class Client
+class VindiniumClient
 {
     const GAME_WAIT_TIMEOUT = 15;
     const NEW_GAME_WAIT_TIMEOUT = 30 * 60;
@@ -16,6 +17,9 @@ class Client
     private $server;
     private $endPoint;
     private $params = [];
+    /**
+     * @var Bot
+     */
     private $bot;
 
     public function __construct($server, $key)
@@ -83,7 +87,6 @@ class Client
             ]
         ))->prepare();
 
-        // ob_start();
         while (!$game->isFinished()) {
             $consoleOutput->write(
                 0,
@@ -99,13 +102,13 @@ class Client
             $consoleOutput->write(1, $board);
 
             // Move to some direction
-            $url = $state['playUrl'];
+            $endPoint = sprintf("/api/%s/%s/play", $state['game']['id'], $state['token']);
 
             $turnStart = microtime(true);
             $direction = $this->bot->chooseNextMove($board, $game->getHero());
             $decisionTime = microtime(true) - $turnStart;
 
-            $state = $this->move($url, $direction);
+            $state = $this->move($endPoint, $direction);
 
             $lines = [];
             foreach ($game->getHeroes() as $hero) {
@@ -118,41 +121,42 @@ class Client
             $consoleOutput->write(2, implode(PHP_EOL, $lines));
 
             $game = Game::buildFromVindiniumResponse($state);
-            // ob_flush();
         }
-        // ob_end_clean();
     }
 
     private function getNewGameState()
     {
-        $response = HttpPost::post($this->server . $this->endPoint, $this->params, self::NEW_GAME_WAIT_TIMEOUT);
-
-        if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
-            return json_decode($response['content'], true);
-        } else {
-            echo "Error when creating the game\n";
-            echo $response['content'];
-        }
+        return $this->postAction($this->endPoint, $this->params, self::NEW_GAME_WAIT_TIMEOUT);
     }
 
-    private function move($url, $direction)
+    private function move($endPoint, $direction)
     {
-        /*
-         * Send a move to the server
-         * Moves can be one of: 'Stay', 'North', 'South', 'East', 'West'
-         */
+        return $this->postAction($endPoint, ['dir' => $direction], self::GAME_WAIT_TIMEOUT);
+    }
 
-        try {
-            $response = HttpPost::post($url, array('dir' => $direction), self::GAME_WAIT_TIMEOUT);
-            if (isset($response['headers']['status_code']) && $response['headers']['status_code'] == 200) {
-                return json_decode($response['content'], true);
-            } else {
-                echo "Error HTTP " . $response['headers']['status_code'] . "\n" . $response['content'] . "\n";
-                return array('game' => array('finished' => true));
-            }
-        } catch (\Exception $e) {
-            echo $e->getMessage() . "\n";
-            return array('game' => array('finished' => true));
+    private function postAction($endPoint, $params, $timeout): array
+    {
+        $client = new HttpClient([
+            'base_uri' => $this->server,
+            'timeout' => $timeout
+        ]);
+
+        $response = $client->post($endPoint, [
+            'form_params' => $params
+        ]);
+
+        if ($response->getStatusCode() != 200) {
+            throw new \RuntimeException(
+                sprintf(
+                    "Request to %s failed: [%d] %s\n%s",
+                    $endPoint,
+                    $response->getStatusCode(),
+                    $response->getReasonPhrase(),
+                    $response->getBody()
+                )
+            );
         }
+
+        return \GuzzleHttp\json_decode($response->getBody(), true);
     }
 }

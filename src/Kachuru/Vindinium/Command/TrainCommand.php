@@ -6,7 +6,7 @@ use Kachuru\Base\Command\Command;
 use Kachuru\Vindinium\Bot\BasicBot;
 use Kachuru\Vindinium\Bot\BotFactory;
 use Kachuru\Vindinium\Bot\CleverBot;
-use Kachuru\Vindinium\Client;
+use Kachuru\Vindinium\VindiniumClient;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,7 +19,7 @@ class TrainCommand extends Command
      */
     private $botFactory;
 
-    public function __construct(Client $client, BotFactory $botFactory)
+    public function __construct(VindiniumClient $client, BotFactory $botFactory)
     {
         $this->client = $client;
         $this->botFactory = $botFactory;

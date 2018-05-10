@@ -6,7 +6,7 @@ services:
       - Kachuru\Vindinium\Game\BoardTile
       - Kachuru\Vindinium\Bot\BoardTileScore
 
-  Kachuru\Vindinium\Client:
+  Kachuru\Vindinium\VindiniumClient:
     arguments:
       - "%vindinium.server%"
       - "%vindinium.key%"
