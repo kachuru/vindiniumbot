@@ -6,11 +6,6 @@ services:
       - Kachuru\Vindinium\Game\BoardTile
       - Kachuru\Vindinium\Bot\BoardTileScore
 
-  Kachuru\Vindinium\VindiniumClient:
-    arguments:
-      - "%vindinium.server%"
-      - "%vindinium.key%"
-
   Kachuru\Vindinium\Bot\BotFactory:
     calls:
       - method: addBot
@@ -25,3 +20,22 @@ services:
       - method: addBot
         arguments:
           - '@Kachuru\Vindinium\Bot\CleverBot'
+
+  Kachuru\Vindinium\Command\TrainCommand:
+    autowire: "true"
+    tags:
+      tag:
+        name: "vindinium-bot.console.command"
+        configurator: 'Kachuru\Vindinium\VindiniumCommandConfigurator'
+
+  Kachuru\Vindinium\Command\ArenaCommand:
+    autowire: "true"
+    tags:
+      tag:
+        name: "vindinium-bot.console.command"
+        configurator: 'Kachuru\Vindinium\VindiniumCommandConfigurator'
+
+  Kachuru\Vindinium\VindiniumClient:
+    arguments:
+      - "%vindinium.server%"
+      - "%vindinium.key%"

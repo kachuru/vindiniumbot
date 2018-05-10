@@ -30,7 +30,6 @@ class ArenaCommand extends Command
     {
         $this->setName('arena');
         $this->setDescription('Run the bot in arena mode');
-        $this->addOption('bot', 'b', InputOption::VALUE_OPTIONAL, 'Bot scheme to use', 'random');
         $this->addOption('games', 'g', InputOption::VALUE_OPTIONAL, 'Number of games to run for', 1);
     }
 
