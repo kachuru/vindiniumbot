@@ -6,6 +6,7 @@ use Kachuru\Base\Command\Command;
 use Kachuru\Vindinium\Bot\BasicBot;
 use Kachuru\Vindinium\Bot\BotFactory;
 use Kachuru\Vindinium\Bot\CleverBot;
+use Kachuru\Vindinium\Display\DisplayFactory;
 use Kachuru\Vindinium\VindiniumClient;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,11 +19,16 @@ class ArenaCommand extends Command
      * @var BotFactory
      */
     private $botFactory;
+    /**
+     * @var DisplayFactory
+     */
+    private $displayFactory;
 
-    public function __construct(VindiniumClient $client, BotFactory $botFactory)
+    public function __construct(VindiniumClient $client, BotFactory $botFactory, DisplayFactory $displayFactory)
     {
         $this->client = $client;
         $this->botFactory = $botFactory;
+        $this->displayFactory = $displayFactory;
         parent::__construct();
     }
 

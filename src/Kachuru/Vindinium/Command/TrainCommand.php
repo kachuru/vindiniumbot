@@ -4,6 +4,7 @@ namespace Kachuru\Vindinium\Command;
 
 use Kachuru\Base\Command\Command;
 use Kachuru\Vindinium\Bot\BotFactory;
+use Kachuru\Vindinium\Display\DisplayFactory;
 use Kachuru\Vindinium\VindiniumClient;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,11 +17,16 @@ class TrainCommand extends Command
      * @var BotFactory
      */
     private $botFactory;
+    /**
+     * @var DisplayFactory
+     */
+    private $displayFactory;
 
-    public function __construct(VindiniumClient $client, BotFactory $botFactory)
+    public function __construct(VindiniumClient $client, BotFactory $botFactory, DisplayFactory $displayFactory)
     {
         $this->client = $client;
         $this->botFactory = $botFactory;
+        $this->displayFactory = $displayFactory;
         parent::__construct();
     }
 
@@ -35,6 +41,7 @@ class TrainCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $bot = $this->botFactory->getBotByHandle($input->getOption('bot'));
+        $display = $this->displayFactory->getDisplay($input->getOption('display'));
 
         $this->client->startTraining($bot, $input->getOption('turns'), $input->getOption('map'));
     }

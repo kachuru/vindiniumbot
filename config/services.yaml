@@ -35,6 +35,12 @@ services:
         name: "vindinium-bot.console.command"
         configurator: 'Kachuru\Vindinium\VindiniumCommandConfigurator'
 
+  Kachuru\Vindinium\Display\DisplayFactory:
+    calls:
+      - method: addDisplay
+        arguments:
+          - '@Kachuru\Vindinium\Display\StandardDisplay'
+
   Kachuru\Vindinium\VindiniumClient:
     arguments:
       - "%vindinium.server%"
