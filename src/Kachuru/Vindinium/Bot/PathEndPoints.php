@@ -3,7 +3,7 @@
 namespace Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Game\Board;
-use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Position;
 
 class PathEndPoints

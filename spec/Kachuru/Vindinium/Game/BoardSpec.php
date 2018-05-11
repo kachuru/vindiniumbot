@@ -3,7 +3,7 @@
 namespace spec\Kachuru\Vindinium\Game;
 
 use Kachuru\Vindinium\Game\Board;
-use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Position;
@@ -12,7 +12,6 @@ use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use Kachuru\Vindinium\Game\Tile\WallTile;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class BoardSpec

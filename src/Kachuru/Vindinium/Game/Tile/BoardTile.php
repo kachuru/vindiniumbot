@@ -1,9 +1,9 @@
 <?php
 
-namespace Kachuru\Vindinium\Game;
+namespace Kachuru\Vindinium\Game\Tile;
 
 use Kachuru\Vindinium\Game\Hero\Hero;
-use Kachuru\Vindinium\Game\Tile\TileType;
+use Kachuru\Vindinium\Game\Position;
 
 class BoardTile
 {

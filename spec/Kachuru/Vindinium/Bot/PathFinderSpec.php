@@ -4,10 +4,9 @@ namespace spec\Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Bot\BoardTileScore;
 use Kachuru\Vindinium\Bot\PathEndPoints;
-use Kachuru\Vindinium\Bot\PathFinder;
 use Kachuru\Vindinium\Bot\ScoredBoardTile;
 use Kachuru\Vindinium\Game\Board;
-use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
@@ -15,7 +14,6 @@ use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class PathFinderSpec

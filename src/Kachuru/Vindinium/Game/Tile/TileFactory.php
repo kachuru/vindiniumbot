@@ -2,7 +2,6 @@
 
 namespace Kachuru\Vindinium\Game\Tile;
 
-use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;

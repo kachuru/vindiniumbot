@@ -1,17 +1,16 @@
 <?php
 
-namespace spec\Kachuru\Vindinium\Game;
+namespace spec\Kachuru\Vindinium\Game\Tile;
 
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
-use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
 use Kachuru\Vindinium\Game\Tile\TavernTile;
 use Kachuru\Vindinium\Game\Tile\WallTile;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class BoardTileSpec

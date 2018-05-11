@@ -3,10 +3,8 @@
 namespace spec\Kachuru\Vindinium\Game\Hero;
 
 use Kachuru\Vindinium\Game\Hero\BaseHero;
-use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Position;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 class HeroesSpec extends ObjectBehavior
 {

@@ -2,8 +2,8 @@
 
 namespace Kachuru\Vindinium\Bot;
 
-use Kachuru\Vindinium\Game\BoardTile;
 use Kachuru\Vindinium\Game\Position;
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 
 class ScoredBoardTile
 {

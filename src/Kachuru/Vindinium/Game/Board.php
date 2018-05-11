@@ -2,6 +2,7 @@
 
 namespace Kachuru\Vindinium\Game;
 
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 
 class Board

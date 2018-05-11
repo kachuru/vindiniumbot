@@ -2,7 +2,6 @@
 
 namespace Kachuru\Vindinium\Bot;
 
-
 class BotFactory
 {
     private $bots = [];

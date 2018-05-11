@@ -2,7 +2,7 @@
 
 namespace spec\Kachuru\Vindinium\Game\Tile;
 
-use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
@@ -16,7 +16,6 @@ use Kachuru\Vindinium\Game\Tile\TavernTile;
 use Kachuru\Vindinium\Game\Tile\TileType;
 use Kachuru\Vindinium\Game\Tile\WallTile;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class TileFactorySpec

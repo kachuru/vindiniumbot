@@ -5,11 +5,10 @@ namespace spec\Kachuru\Vindinium\Bot;
 use Kachuru\Vindinium\Bot\BoardTileScore;
 use Kachuru\Vindinium\Bot\PathEndPoints;
 use Kachuru\Vindinium\Bot\ScoredBoardTile;
-use Kachuru\Vindinium\Game\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 
 /**
  * Class BoardTileScorerSpec
