@@ -11,6 +11,8 @@ class BasicBot implements Bot
 
     private $currentPath;
     private $botHelper;
+    private $decisionTime;
+    private $move;
 
     public function __construct(BotHelper $botHelper)
     {
@@ -27,8 +29,20 @@ class BasicBot implements Bot
         return 'BasicBot';
     }
 
+    public function getMove(): string
+    {
+        return $this->move;
+    }
+
+    public function getDecisionTime(): float
+    {
+        return $this->decisionTime;
+    }
+
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {
+        $turnStart = microtime(true);
+
         if ($player->getLife() < self::TAVERN_LIFE) {
             $this->currentPath = $this->botHelper->getPathToNearestTavern($board, $player);
         } else {
@@ -39,9 +53,14 @@ class BasicBot implements Bot
             return BotHelper::DIRECTION_STAY;
         }
 
-        return $this->botHelper->getRelativeDirection(
+        $this->move = $this->botHelper->getRelativeDirection(
             $player->getPosition(),
             array_shift($this->currentPath)->getPosition()
         );
+
+
+        $this->decisionTime = microtime(true) - $turnStart;
+
+        return $this->move;
     }
 }

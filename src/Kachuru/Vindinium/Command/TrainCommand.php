@@ -40,9 +40,10 @@ class TrainCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $bot = $this->botFactory->getBotByHandle($input->getOption('bot'));
-        $display = $this->displayFactory->getDisplay($input->getOption('display'));
-
-        $this->client->startTraining($bot, $input->getOption('turns'), $input->getOption('map'));
+        $this->client->startTraining(
+            $this->botFactory->getBotByHandle($input->getOption('bot')),
+            $this->displayFactory->getDisplay($input->getOption('display')),
+            $input->getOption('turns'), $input->getOption('map')
+        );
     }
 }

@@ -8,6 +8,8 @@ use Kachuru\Vindinium\Game\Hero\PlayerHero;
 class AimlessBot implements Bot
 {
     private $botHelper;
+    private $move;
+    private $decisionTime;
 
     public function __construct(BotHelper $botHelper)
     {
@@ -24,8 +26,21 @@ class AimlessBot implements Bot
         return 'AimlessBot';
     }
 
+    public function getMove(): string
+    {
+        return $this->move;
+    }
+
+    public function getDecisionTime(): float
+    {
+        return $this->decisionTime;
+    }
+
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {
-        return $this->botHelper->getRandomDirection();
+        $turnStart = microtime(true);
+        $this->move = $this->botHelper->getRandomDirection();
+        $this->decisionTime = microtime(true) - $turnStart;
+        return $this->move;
     }
 }

@@ -19,6 +19,8 @@ class CleverBot implements Bot
      * @var BotHelper
      */
     private $botHelper;
+    private $move;
+    private $decisionTime;
 
     public function __construct(BotHelper $botHelper)
     {
@@ -39,8 +41,20 @@ class CleverBot implements Bot
         return 'CleverBot';
     }
 
+    public function getMove(): string
+    {
+        return $this->move;
+    }
+
+    public function getDecisionTime(): float
+    {
+        return $this->decisionTime;
+    }
+
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {
+        $turnStart = microtime(true);
+
         if (!$this->validatePosition($player->getPosition()) || !$this->validatePath($board, $player)) {
             $this->currentPath = null;
         }
@@ -53,10 +67,14 @@ class CleverBot implements Bot
             return BotHelper::DIRECTION_STAY;
         }
 
-        return $this->botHelper->getRelativeDirection(
+        $this->move = $this->botHelper->getRelativeDirection(
             $player->getPosition(),
             array_shift($this->currentPath)->getPosition()
         );
+
+        $this->decisionTime = microtime(true) - $turnStart;
+
+        return $this->move;
     }
 
     public function selectPath(Board $board, PlayerHero $player): array

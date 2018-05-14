@@ -3,9 +3,7 @@
 namespace Kachuru\Vindinium\Command;
 
 use Kachuru\Base\Command\Command;
-use Kachuru\Vindinium\Bot\BasicBot;
 use Kachuru\Vindinium\Bot\BotFactory;
-use Kachuru\Vindinium\Bot\CleverBot;
 use Kachuru\Vindinium\Display\DisplayFactory;
 use Kachuru\Vindinium\VindiniumClient;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,8 +39,10 @@ class ArenaCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $bot = $this->botFactory->getBotByHandle($input->getOption('bot'));
-
-        $this->client->startArena($bot, $input->getOption('games'));
+        $this->client->startArena(
+            $this->botFactory->getBotByHandle($input->getOption('bot')),
+            $this->displayFactory->getDisplay($input->getOption('display')),
+            $input->getOption('games')
+        );
     }
 }

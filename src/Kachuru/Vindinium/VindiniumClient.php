@@ -3,9 +3,8 @@
 namespace Kachuru\Vindinium;
 
 use GuzzleHttp\Client as HttpClient;
-use Kachuru\Util\ConsoleOutput;
-use Kachuru\Util\ConsoleWindow;
 use Kachuru\Vindinium\Bot\Bot;
+use Kachuru\Vindinium\Display\Display;
 use Kachuru\Vindinium\Game\Game;
 
 class VindiniumClient
@@ -28,7 +27,7 @@ class VindiniumClient
         $this->key = $key;
     }
 
-    public function startTraining(Bot $bot, $turns = 300, $map = null)
+    public function startTraining(Bot $bot, Display $display, $turns = 300, $map = null)
     {
         $this->endPoint = '/api/training';
         $this->params = [
@@ -44,12 +43,12 @@ class VindiniumClient
 
         echo "Starting training mode" . PHP_EOL;
 
-        $this->run();
+        $this->run($display);
 
         echo "Finished" . PHP_EOL;
     }
 
-    public function startArena(Bot $bot, $games = 1)
+    public function startArena(Bot $bot, Display $display, $games = 1)
     {
         $this->endPoint = '/api/arena';
         $this->params = [
@@ -64,63 +63,35 @@ class VindiniumClient
             echo "Game starting: {$i}/{$games}" . PHP_EOL;
             echo "Connected and waiting for other players to join..." . PHP_EOL;
 
-            $this->run();
+            $this->run($display);
 
             echo "Game finished: {$i}/{$games}" . PHP_EOL;
         }
     }
 
-    private function run()
+    private function run(Display $display)
     {
         // Get the initial state
         $state = $this->getNewGameState();
 
         $game = Game::buildFromVindiniumResponse($state);
 
-        $boardSize = $state['game']['board']['size'];
-
-        $consoleOutput = (new ConsoleOutput(
-            [
-                new ConsoleWindow(1, 1, 118, 1),
-                new ConsoleWindow(1, 3, $boardSize * 2, $boardSize),
-                new ConsoleWindow(($boardSize * 2) + 2, 3, 117 - ($boardSize * 2), $boardSize)
-            ]
-        ))->prepare();
+        $display->prepare($game->getBoard()->getSize());
 
         while (!$game->isFinished()) {
-            $consoleOutput->write(
-                0,
-                sprintf(
-                    ' Game: %s - Turn: %d    Bot: %s',
-                    $state['viewUrl'],
-                    $state['game']['turn'],
-                    $this->bot->getName()
-                )
-            );
-
             $board = $game->getBoard();
-            $consoleOutput->write(1, $board);
 
             // Move to some direction
             $endPoint = sprintf("/api/%s/%s/play", $state['game']['id'], $state['token']);
 
-            $turnStart = microtime(true);
+
             $direction = $this->bot->chooseNextMove($board, $game->getHero());
-            $decisionTime = microtime(true) - $turnStart;
 
             $state = $this->move($endPoint, $direction);
 
-            $lines = [];
-            foreach ($game->getHeroes() as $hero) {
-                $lines[] = " " . $hero;
-                if ($hero->getId() == $game->getHero()->getId()) {
-                    $lines[] = sprintf("    - Move: %5s in %.3fms    ", $direction, $decisionTime * 1000) . PHP_EOL;
-                }
-            }
-
-            $consoleOutput->write(2, implode(PHP_EOL, $lines));
-
             $game = Game::buildFromVindiniumResponse($state);
+
+            $display->write($game, $this->bot);
         }
     }
 

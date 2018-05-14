@@ -23,7 +23,8 @@ class Game
             new State(
                 (int) $state['game']['turn'],
                 (int) $state['game']['maxTurns'],
-                (bool) $state['game']['finished']
+                (bool) $state['game']['finished'],
+                (string) $state['viewUrl']
             ),
             Board::buildFromVindiniumResponse(new TileFactory($heroes), $state['game']['board']),
             PlayerHero::buildFromVindiniumResponse($state['hero']),

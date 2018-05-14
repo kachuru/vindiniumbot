@@ -7,6 +7,9 @@ use Kachuru\Vindinium\Game\Hero\PlayerHero;
 
 class RandomBot implements Bot
 {
+    /**
+     * @var Bot
+     */
     private $bot;
     /**
      * @var BotFactory
@@ -26,6 +29,16 @@ class RandomBot implements Bot
     public function getName(): string
     {
         return 'Random ' . $this->getBot()->getName();
+    }
+
+    public function getMove(): string
+    {
+        return $this->bot->getMove();
+    }
+
+    public function getDecisionTime(): float
+    {
+        return $this->bot->getDecisionTime();
     }
 
     public function chooseNextMove(Board $board, PlayerHero $player): string

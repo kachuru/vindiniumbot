@@ -55,6 +55,11 @@ class Board
         ));
     }
 
+    public function getSize(): int
+    {
+        return (int) $this->size;
+    }
+
     public function getMineTiles()
     {
         return $this->tileTypes['MineTile'];
