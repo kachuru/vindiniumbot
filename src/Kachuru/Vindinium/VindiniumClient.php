@@ -77,21 +77,17 @@ class VindiniumClient
         $game = Game::buildFromVindiniumResponse($state);
 
         $display->prepare($game->getBoard()->getSize());
+        $display->writeStart($game, $this->bot);
 
         while (!$game->isFinished()) {
-            $board = $game->getBoard();
-
-            // Move to some direction
-            $endPoint = sprintf("/api/%s/%s/play", $state['game']['id'], $state['token']);
-
-
-            $direction = $this->bot->chooseNextMove($board, $game->getHero());
-
-            $state = $this->move($endPoint, $direction);
+            $state = $this->move(
+                sprintf("/api/%s/%s/play", $state['game']['id'], $state['token']),
+                $this->bot->chooseNextMove($game->getBoard(), $game->getHero())
+            );
 
             $game = Game::buildFromVindiniumResponse($state);
 
-            $display->write($game, $this->bot);
+            $display->writeProgress($game, $this->bot);
         }
     }
 

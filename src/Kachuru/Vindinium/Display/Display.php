@@ -9,5 +9,6 @@ interface Display
 {
     public function getHandle(): string;
     public function prepare(int $boardSize);
-    public function write(Game $game, Bot $bot);
+    public function writeStart(Game $game, Bot $bot);
+    public function writeProgress(Game $game, Bot $bot);
 }

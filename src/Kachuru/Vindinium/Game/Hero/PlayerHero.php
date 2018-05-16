@@ -18,11 +18,6 @@ class PlayerHero implements Hero
         $this->hero = $hero;
     }
 
-    public function __toString(): string
-    {
-        return (string) $this->hero;
-    }
-
     public function getId(): int
     {
         return (int) $this->hero->getId();

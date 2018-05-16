@@ -6,8 +6,6 @@ use Kachuru\Vindinium\Game\Position;
 
 class BaseHero implements Hero
 {
-    const HERO_OUTPUT = '[%d] %s [%2d, %2d] - Life:%3d Gold: %4d Mines: %2d';
-
     private $id;
     private $name;
     private $life;
@@ -39,20 +37,6 @@ class BaseHero implements Hero
         $this->gold = $gold;
         $this->mineCount = $mineCount;
         $this->position = $position;
-    }
-
-    public function __toString(): string
-    {
-        return sprintf(
-            self::HERO_OUTPUT,
-            $this->id,
-            str_pad(substr($this->name, 0, 13), 13),
-            $this->position->getX(),
-            $this->position->getY(),
-            $this->life,
-            $this->gold,
-            $this->mineCount
-        );
     }
 
     public function getId(): int
