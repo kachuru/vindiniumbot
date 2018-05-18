@@ -40,6 +40,9 @@ services:
       - method: addDisplay
         arguments:
           - '@Kachuru\Vindinium\Display\StandardDisplay'
+      - method: addDisplay
+        arguments:
+          - '@Kachuru\Vindinium\Display\EnhancedMapDisplay'
 
   Kachuru\Vindinium\VindiniumClient:
     arguments:

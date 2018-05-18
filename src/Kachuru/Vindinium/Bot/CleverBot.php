@@ -51,6 +51,16 @@ class CleverBot implements Bot
         return $this->decisionTime;
     }
 
+    public function hasPath(): bool
+    {
+        return !empty($this->currentPath);
+    }
+
+    public function getPath(): array
+    {
+        return $this->currentPath;
+    }
+
     public function chooseNextMove(Board $board, PlayerHero $player): string
     {
         $turnStart = microtime(true);

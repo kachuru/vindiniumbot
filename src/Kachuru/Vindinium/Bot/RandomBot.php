@@ -36,6 +36,16 @@ class RandomBot implements Bot
         return $this->bot->getMove();
     }
 
+    public function getPath(): array
+    {
+        return $this->bot->getPath();
+    }
+
+    public function hasPath(): bool
+    {
+        return $this->bot->hasPath();
+    }
+
     public function getDecisionTime(): float
     {
         return $this->bot->getDecisionTime();

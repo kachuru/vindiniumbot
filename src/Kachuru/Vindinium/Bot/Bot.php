@@ -12,4 +12,6 @@ interface Bot
     public function chooseNextMove(Board $board, PlayerHero $player): string;
     public function getMove(): string;
     public function getDecisionTime(): float;
+    public function hasPath(): bool;
+    public function getPath(): array;
 }

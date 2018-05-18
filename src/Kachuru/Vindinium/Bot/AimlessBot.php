@@ -43,4 +43,14 @@ class AimlessBot implements Bot
         $this->decisionTime = microtime(true) - $turnStart;
         return $this->move;
     }
+
+    public function hasPath(): bool
+    {
+        return false;
+    }
+
+    public function getPath(): array
+    {
+        return [];
+    }
 }
