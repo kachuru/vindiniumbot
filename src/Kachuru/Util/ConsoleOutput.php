@@ -7,16 +7,10 @@ class ConsoleOutput
     private $windows;
     private $height = 0;
 
-    public function __construct(array $windows)
+    public function prepare(array $windows): ConsoleOutput
     {
         $this->windows = $windows;
-    }
 
-    /**
-     * Draw the frames for all the windows
-     */
-    public function prepare(): ConsoleOutput
-    {
         $this->clearScreen();
 
         foreach ($this->windows as $window) {

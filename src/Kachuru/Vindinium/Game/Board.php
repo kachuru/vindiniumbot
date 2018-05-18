@@ -45,14 +45,9 @@ class Board
         );
     }
 
-    public function __toString(): string
+    public function getBoardTiles(): array
     {
-        return (string) implode(PHP_EOL, array_map(
-            function ($row) {
-                return implode('', $row);
-            },
-            $this->tiles
-        ));
+        return $this->tiles;
     }
 
     public function getSize(): int

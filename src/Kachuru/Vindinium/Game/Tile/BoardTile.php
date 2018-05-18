@@ -18,11 +18,6 @@ class BoardTile
         $this->hero = $hero;
     }
 
-    public function __toString(): string
-    {
-        return (string) sprintf(($this->tileType)::OUTPUT, is_null($this->hero) ? '-' : $this->hero->getId());
-    }
-
     public function getPosition(): Position
     {
         return $this->position;
