@@ -2,8 +2,9 @@
 
 namespace Kachuru\Vindinium\Display;
 
-use Kachuru\Util\ConsoleOutput;
-use Kachuru\Util\ConsoleWindow;
+use Kachuru\Util\Console\ConsoleContent;
+use Kachuru\Util\Console\ConsoleOutput;
+use Kachuru\Util\Console\ConsoleWindow;
 use Kachuru\Vindinium\Bot\Bot;
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\Game;
@@ -16,6 +17,7 @@ class EnhancedMapDisplay implements Display
     const MAX_SIZE = 118;
     const HERO_OUTPUT = ' [%d] %s [%2d, %2d] - Life:%3d Gold: %4d Mines: %2d';
     const BOT_STATUS_OUTPUT = "    - Move: %5s in %.3fms    ";
+
     const BOARD_OUTPUT = [
         'EmptyTile' => '  ',
         'WallTile' => '##',
@@ -29,8 +31,6 @@ class EnhancedMapDisplay implements Display
      * @var ConsoleOutput
      */
     private $consoleOutput;
-
-    private $bot;
 
     public function __construct(ConsoleOutput $consoleOutput)
     {
@@ -46,8 +46,10 @@ class EnhancedMapDisplay implements Display
     {
         $this->consoleOutput->prepare(
             [
-                new ConsoleWindow(1, 1, self::MAX_SIZE, 1),
-                new ConsoleWindow(1, 3, self::MAX_SIZE, $boardSize * 2)
+                'info' => new ConsoleWindow(1, 1, self::MAX_SIZE - 18, 1),
+                'map' => new ConsoleWindow(1, 3, self::MAX_SIZE, $boardSize * 2),
+                'gold' => new ConsoleWindow(self::MAX_SIZE - 17, 1, 9, 1),
+                'life' => new ConsoleWindow(self::MAX_SIZE - 7, 1, 8, 1)
             ]
         );
     }
@@ -56,7 +58,7 @@ class EnhancedMapDisplay implements Display
     {
         $state = $game->getState();
         $this->consoleOutput->write(
-            0,
+            'info',
             sprintf(
                 ' Game: %s - Turn: %d    Bot: %s',
                 $state->getViewUrl(),
@@ -65,14 +67,14 @@ class EnhancedMapDisplay implements Display
             )
         );
 
-        $this->consoleOutput->write(1, $this->renderBoard($game->getBoard(), $bot));
+        $this->consoleOutput->write('map', $this->renderBoard($game->getBoard(), $bot));
     }
 
     public function writeProgress(Game $game, Bot $bot)
     {
         $this->writeStart($game, $bot);
 
-        $this->consoleOutput->write(1, $this->renderBoard($game->getBoard(), $bot));
+        $this->consoleOutput->write('map', $this->renderBoard($game->getBoard(), $bot));
 
         $lines = [];
         foreach ($game->getHeroes() as $hero) {
@@ -88,6 +90,15 @@ class EnhancedMapDisplay implements Display
             );
 
             if ($hero instanceof PlayerHero) {
+                $this->consoleOutput->write(
+                    'gold',
+                    (new ConsoleContent(sprintf(" G: %4d", $hero->getGold())))->yellow()
+                );
+                $this->consoleOutput->write(
+                    'life',
+                    (new ConsoleContent(sprintf(" L: %3d", $hero->getLife())))->red()
+                );
+
                 $lines[] = sprintf(
                         self::BOT_STATUS_OUTPUT,
                         $bot->getMove(),
@@ -121,22 +132,87 @@ class EnhancedMapDisplay implements Display
 
     private function renderTopOfBoardTile(BoardTile $boardTile, Bot $bot, Hero $hero = null): string
     {
-        return ($boardTile->getTypeName() == 'EmptyTile' && $bot->hasPath())
-            ? $this->getDisplayForEmptyTile($boardTile, $bot)
-            : (string) sprintf(self::BOARD_OUTPUT[(string) $boardTile->getTypeName()], is_null($hero) ? '-' : $hero->getId());
+        return $this->colorBoardTileTop(
+            $boardTile,
+            $boardTile->getTypeName() == 'EmptyTile' && $bot->hasPath()
+                ? $this->getDisplayForEmptyTile($boardTile, $bot)
+                : (string) sprintf(
+                    self::BOARD_OUTPUT[(string) $boardTile->getTypeName()],
+                    is_null($hero) ? '-' : $hero->getId()
+                )
+        );
     }
 
     private function renderBottomOfBoardTile(BoardTile $boardTile, int $cost = null): string
     {
-        return ($boardTile->getTypeName() == 'WallTile')
-            ? self::BOARD_OUTPUT[(string) $boardTile->getTypeName()]
-            : sprintf('%2d', $cost);
+        return $this->colorBoardTileBottom(
+            $boardTile,
+            $boardTile->getTypeName() == 'WallTile'
+                ? self::BOARD_OUTPUT[(string) $boardTile->getTypeName()]
+                : sprintf('%2d', $cost)
+        );
     }
 
     private function getDisplayForEmptyTile(BoardTile $boardTile, Bot $bot)
     {
         return (in_array($boardTile, $bot->getPath()))
-            ? '••'
+            ? (new ConsoleContent('••'))->green()->bold()
             : self::BOARD_OUTPUT[(string) $boardTile->getTypeName()];
+    }
+
+    private function colorBoardTileTop(BoardTile $boardTile, $content)
+    {
+        $content = new ConsoleContent($content);
+
+        switch ($boardTile->getTypeName()) {
+            case 'PlayerHeroTile':
+                $content->bold()->green();
+                break;
+
+            case 'EnemyHeroTile':
+                $content->bold()->red();
+                break;
+
+            case 'TavernTile':
+                $content->yellow();
+                break;
+
+            case 'MineTile':
+                $this->colorMineTile($boardTile, $content);
+                break;
+
+            case 'WallTile':
+                $content->magenta();
+                break;
+
+        }
+
+        return $content;
+    }
+
+    private function colorBoardTileBottom(BoardTile $boardTile, $content)
+    {
+        $content = (new ConsoleContent($content))->blue();
+
+        switch ($boardTile->getTypeName()) {
+            case 'WallTile':
+                $content->magenta();
+                break;
+        }
+
+        return $content;
+    }
+
+    private function colorMineTile(BoardTile $boardTile, ConsoleContent $content)
+    {
+        $hero = $boardTile->getHero();
+
+        if (!is_null($hero)) {
+            if ($hero instanceof PlayerHero) {
+                $content->green();
+            } else {
+                $content->red();
+            }
+        }
     }
 }

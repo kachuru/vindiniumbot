@@ -1,6 +1,6 @@
 <?php
 
-namespace Kachuru\Util;
+namespace Kachuru\Util\Console;
 
 class ConsoleWindow
 {

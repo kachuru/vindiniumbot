@@ -2,8 +2,8 @@
 
 namespace Kachuru\Vindinium\Display;
 
-use Kachuru\Util\ConsoleOutput;
-use Kachuru\Util\ConsoleWindow;
+use Kachuru\Util\Console\ConsoleOutput;
+use Kachuru\Util\Console\ConsoleWindow;
 use Kachuru\Vindinium\Bot\Bot;
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\Game;

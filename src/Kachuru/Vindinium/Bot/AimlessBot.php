@@ -36,14 +36,6 @@ class AimlessBot implements Bot
         return $this->decisionTime;
     }
 
-    public function chooseNextMove(Board $board, PlayerHero $player): string
-    {
-        $turnStart = microtime(true);
-        $this->move = $this->botHelper->getRandomDirection();
-        $this->decisionTime = microtime(true) - $turnStart;
-        return $this->move;
-    }
-
     public function hasPath(): bool
     {
         return false;
@@ -52,5 +44,13 @@ class AimlessBot implements Bot
     public function getPath(): array
     {
         return [];
+    }
+
+    public function chooseNextMove(Board $board, PlayerHero $player): string
+    {
+        $turnStart = microtime(true);
+        $this->move = $this->botHelper->getRandomDirection();
+        $this->decisionTime = microtime(true) - $turnStart;
+        return $this->move;
     }
 }
