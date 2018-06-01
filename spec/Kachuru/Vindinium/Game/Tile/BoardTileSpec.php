@@ -29,7 +29,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('WallTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('##');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(null);
     }
@@ -44,7 +43,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('EmptyTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('  ');
         $this->isWalkable()->shouldReturn(true);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -59,7 +57,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('MineTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('$-');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -75,7 +72,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('MineTile');
         $this->getHero()->shouldReturn($hero);
-        $this->__toString()->shouldReturn('$1');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -90,7 +86,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('TavernTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('[]');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -106,8 +101,7 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('EnemyHeroTile');
         $this->getHero()->shouldReturn($hero);
-        $this->__toString()->shouldReturn('@4');
         $this->isWalkable()->shouldReturn(true);
-        $this->getBaseMoveCost()->shouldReturn(5);
+        $this->getBaseMoveCost()->shouldReturn(20);
     }
 }

@@ -35,22 +35,6 @@ class BoardSpec extends ObjectBehavior
         $this->tileFactory = new TileFactory($this->heroes);
     }
 
-    public function it_prints_the_expected_board_output()
-    {
-        $this->beConstructedWith($this->tileFactory, 5, $this->getSimpleTestBoard());
-
-        // Do it like this so we are not depending on checking the test board again
-        $returnBoard =
-              "          " . PHP_EOL
-            . "          " . PHP_EOL
-            . "  ######  " . PHP_EOL
-            . "          " . PHP_EOL
-            . "          ";
-
-
-        $this->__toString()->shouldReturn($returnBoard);
-    }
-
     public function it_returns_the_tile_and_given_position()
     {
         $this->beConstructedWith($this->tileFactory, 5, $this->getSimpleTestBoard());
