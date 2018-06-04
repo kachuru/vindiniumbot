@@ -4,7 +4,7 @@ namespace spec\Kachuru\Vindinium\Bot;
 
 use Kachuru\Vindinium\Bot\BotHelper;
 use Kachuru\Vindinium\Game\Board;
-use Kachuru\Vindinium\Game\Tile\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BaseBoardTile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
@@ -15,6 +15,11 @@ use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
 use PhpSpec\ObjectBehavior;
 
+/**
+ * Class BotHelperSpec
+ * @mixin BotHelper
+ * @package spec\Kachuru\Vindinium\Bot
+ */
 class BotHelperSpec extends ObjectBehavior
 {
     /**
@@ -49,9 +54,9 @@ class BotHelperSpec extends ObjectBehavior
 
         $this->getPathToNearestAvailableMine($board, $this->heroes->getHero(1))->shouldBeLike(
             [
-                new BoardTile(new Position(1, 2), new EmptyTile()),
-                new BoardTile(new Position(1, 3), new EmptyTile()),
-                new BoardTile(new Position(0, 3), new MineTile()),
+                new BaseBoardTile(new Position(1, 2), new EmptyTile()),
+                new BaseBoardTile(new Position(1, 3), new EmptyTile()),
+                new BaseBoardTile(new Position(0, 3), new MineTile()),
             ]
         );
     }
@@ -62,9 +67,9 @@ class BotHelperSpec extends ObjectBehavior
 
         $this->getMinesNotOwnedByPlayerHero($board)->shouldBeLike(
             [
-                new BoardTile(new Position(4, 1), new MineTile()),
-                new BoardTile(new Position(0, 3), new MineTile()),
-                new BoardTile(new Position(4, 3), new MineTile(), $this->heroes->getHero(2)),
+                new BaseBoardTile(new Position(4, 1), new MineTile()),
+                new BaseBoardTile(new Position(0, 3), new MineTile()),
+                new BaseBoardTile(new Position(4, 3), new MineTile(), $this->heroes->getHero(2)),
             ]
         );
     }

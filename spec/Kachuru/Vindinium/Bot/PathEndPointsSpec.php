@@ -5,7 +5,7 @@ namespace spec\Kachuru\Vindinium\Bot;
 use Kachuru\Vindinium\Bot\BoardTileScore;
 use Kachuru\Vindinium\Bot\PathEndPoints;
 use Kachuru\Vindinium\Bot\ScoredBoardTile;
-use Kachuru\Vindinium\Game\Tile\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BaseBoardTile;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
 use PhpSpec\ObjectBehavior;
@@ -52,13 +52,13 @@ class PathEndPointsSpec extends ObjectBehavior
         );
     }
 
-    private function getEmptyBoardTile(Position $position): BoardTile
+    private function getEmptyBoardTile(Position $position): BaseBoardTile
     {
-        return new BoardTile($position, new EmptyTile());
+        return new BaseBoardTile($position, new EmptyTile());
     }
 
     private function getScoredBoardTile(
-        BoardTile $boardTile,
+        BaseBoardTile $boardTile,
         array $score = [0, 0],
         ScoredBoardTile $parentTile = null
     ): ScoredBoardTile {

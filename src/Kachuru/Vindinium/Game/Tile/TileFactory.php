@@ -57,6 +57,6 @@ class TileFactory
         }
 
         $class = self::CLASS_NAMESPACE.$tileType;
-        return new BoardTile($position, new $class(), $hero);
+        return new BaseBoardTile($position, new $class(), $hero);
     }
 }

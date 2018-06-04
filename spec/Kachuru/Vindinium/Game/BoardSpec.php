@@ -3,7 +3,7 @@
 namespace spec\Kachuru\Vindinium\Game;
 
 use Kachuru\Vindinium\Game\Board;
-use Kachuru\Vindinium\Game\Tile\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BaseBoardTile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Position;
@@ -41,12 +41,12 @@ class BoardSpec extends ObjectBehavior
 
         $position = new Position(0, 0);
         $this->getBoardTileAtPosition($position)->shouldBeLike(
-            new BoardTile($position, new EmptyTile)
+            new BaseBoardTile($position, new EmptyTile)
         );
 
         $position = new Position(1, 2);
         $this->getBoardTileAtPosition($position)->shouldBeLike(
-            new BoardTile($position, new WallTile)
+            new BaseBoardTile($position, new WallTile)
         );
     }
 
@@ -56,25 +56,25 @@ class BoardSpec extends ObjectBehavior
 
         $this->getAdjacentBoardTiles(new Position(1, 2))->shouldBeLike(
             [
-                new BoardTile(new Position(1, 1), new EmptyTile()),
-                new BoardTile(new Position(0, 2), new EmptyTile()),
-                new BoardTile(new Position(2, 2), new WallTile()),
-                new BoardTile(new Position(1, 3), new EmptyTile()),
+                new BaseBoardTile(new Position(1, 1), new EmptyTile()),
+                new BaseBoardTile(new Position(0, 2), new EmptyTile()),
+                new BaseBoardTile(new Position(2, 2), new WallTile()),
+                new BaseBoardTile(new Position(1, 3), new EmptyTile()),
             ]
         );
 
         $this->getAdjacentBoardTiles(new Position(4, 2))->shouldBeLike(
             [
-                new BoardTile(new Position(4, 1), new EmptyTile()),
-                new BoardTile(new Position(3, 2), new WallTile()),
-                new BoardTile(new Position(4, 3), new EmptyTile()),
+                new BaseBoardTile(new Position(4, 1), new EmptyTile()),
+                new BaseBoardTile(new Position(3, 2), new WallTile()),
+                new BaseBoardTile(new Position(4, 3), new EmptyTile()),
             ]
         );
 
         $this->getAdjacentBoardTiles(new Position(4, 4))->shouldBeLike(
             [
-                new BoardTile(new Position(4, 3), new EmptyTile()),
-                new BoardTile(new Position(3, 4), new EmptyTile()),
+                new BaseBoardTile(new Position(4, 3), new EmptyTile()),
+                new BaseBoardTile(new Position(3, 4), new EmptyTile()),
             ]
         );
     }
@@ -85,10 +85,10 @@ class BoardSpec extends ObjectBehavior
 
         $this->getMineTiles()->shouldBeLike(
             [
-                new BoardTile(new Position(0, 1), new MineTile(), $this->heroes->getHero(1)),
-                new BoardTile(new Position(4, 1), new MineTile()),
-                new BoardTile(new Position(0, 3), new MineTile()),
-                new BoardTile(new Position(4, 3), new MineTile(), $this->heroes->getHero(2))
+                new BaseBoardTile(new Position(0, 1), new MineTile(), $this->heroes->getHero(1)),
+                new BaseBoardTile(new Position(4, 1), new MineTile()),
+                new BaseBoardTile(new Position(0, 3), new MineTile()),
+                new BaseBoardTile(new Position(4, 3), new MineTile(), $this->heroes->getHero(2))
             ]
         );
     }

@@ -5,7 +5,7 @@ namespace spec\Kachuru\Vindinium\Game\Tile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
-use Kachuru\Vindinium\Game\Tile\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BaseBoardTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
 use Kachuru\Vindinium\Game\Tile\TavernTile;
@@ -14,10 +14,10 @@ use PhpSpec\ObjectBehavior;
 
 /**
  * Class BoardTileSpec
- * @mixin BoardTile
+ * @mixin BaseBoardTile
  * @package spec\Kachuru\Vindinium\Game\Tile
  */
-class BoardTileSpec extends ObjectBehavior
+class BaseBoardTileSpec extends ObjectBehavior
 {
     function it_sets_up_a_wall_tile()
     {
@@ -102,6 +102,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTypeName()->shouldReturn('EnemyHeroTile');
         $this->getHero()->shouldReturn($hero);
         $this->isWalkable()->shouldReturn(true);
-        $this->getBaseMoveCost()->shouldReturn(20);
+        $this->getBaseMoveCost()->shouldReturn(21);
     }
 }
