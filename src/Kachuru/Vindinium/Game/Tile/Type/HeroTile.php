@@ -1,6 +1,6 @@
 <?php
 
-namespace Kachuru\Vindinium\Game\Tile;
+namespace Kachuru\Vindinium\Game\Tile\Type;
 
 class HeroTile implements TileType
 {

@@ -4,6 +4,7 @@ namespace Kachuru\Vindinium\Game\Tile;
 
 use Kachuru\Vindinium\Game\Hero\Hero;
 use Kachuru\Vindinium\Game\Position;
+use Kachuru\Vindinium\Game\Tile\Type\TileType;
 
 interface BoardTile
 {

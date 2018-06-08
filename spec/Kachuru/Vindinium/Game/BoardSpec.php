@@ -4,14 +4,13 @@ namespace spec\Kachuru\Vindinium\Game;
 
 use Kachuru\Vindinium\Game\Board;
 use Kachuru\Vindinium\Game\Tile\BaseBoardTile;
-use Kachuru\Vindinium\Game\Hero\BaseHero;
-use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Position;
-use Kachuru\Vindinium\Game\Tile\EmptyTile;
-use Kachuru\Vindinium\Game\Tile\MineTile;
+use Kachuru\Vindinium\Game\Tile\Type\EmptyTile;
+use Kachuru\Vindinium\Game\Tile\Type\MineTile;
 use Kachuru\Vindinium\Game\Tile\TileFactory;
-use Kachuru\Vindinium\Game\Tile\WallTile;
+use Kachuru\Vindinium\Game\Tile\Type\WallTile;
 use PhpSpec\ObjectBehavior;
+use spec\Kachuru\Vindinium\SpecHelper;
 
 /**
  * Class BoardSpec
@@ -23,14 +22,14 @@ class BoardSpec extends ObjectBehavior
     private $heroes;
     private $tileFactory;
 
+    public function __construct()
+    {
+        $this->specHelper = new SpecHelper();
+    }
+
     public function let()
     {
-        $this->heroes = new Heroes([
-            new BaseHero(1, 'HeroOne', 100, 0, 0, new Position(0, 0)),
-            new BaseHero(2, 'HeroTwo', 100, 0, 0, new Position(4, 0)),
-            new BaseHero(3, 'HeroThree', 100, 0, 0, new Position(0, 4)),
-            new BaseHero(4, 'HeroFour', 100, 0, 0, new Position(4, 4)),
-        ]);
+        $this->heroes = $this->specHelper->getHeroes();
 
         $this->tileFactory = new TileFactory($this->heroes);
     }
@@ -109,19 +108,5 @@ class BoardSpec extends ObjectBehavior
             . "          "
             . "$-      $2"
             . "          ";
-    }
-
-    private function getM1Board()
-    {
-        return "##@1    ####    @4##"
-            . "      ########      "
-            . "        ####        "
-            . "    []        []    "
-            . "$-    ##    ##    $-"
-            . "$-    ##    ##    $-"
-            . "    []        []    "
-            . "        ####  @3    "
-            . "      ########      "
-            . "##@2    ####      ##";
     }
 }

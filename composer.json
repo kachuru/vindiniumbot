@@ -1,7 +1,8 @@
 {
     "autoload": {
         "psr-4": {
-            "Kachuru\\": "src/Kachuru"
+            "Kachuru\\": "src/Kachuru",
+            "spec\\Kachuru\\": "spec/Kachuru"
         }
     },
     "require": {
