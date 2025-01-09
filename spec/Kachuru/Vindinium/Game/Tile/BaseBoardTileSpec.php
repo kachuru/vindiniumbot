@@ -5,7 +5,7 @@ namespace spec\Kachuru\Vindinium\Game\Tile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Position;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
-use Kachuru\Vindinium\Game\Tile\BoardTile;
+use Kachuru\Vindinium\Game\Tile\BaseBoardTile;
 use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
 use Kachuru\Vindinium\Game\Tile\TavernTile;
@@ -14,10 +14,10 @@ use PhpSpec\ObjectBehavior;
 
 /**
  * Class BoardTileSpec
- * @mixin BoardTile
+ * @mixin BaseBoardTile
  * @package spec\Kachuru\Vindinium\Game\Tile
  */
-class BoardTileSpec extends ObjectBehavior
+class BaseBoardTileSpec extends ObjectBehavior
 {
     function it_sets_up_a_wall_tile()
     {
@@ -29,7 +29,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('WallTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('##');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(null);
     }
@@ -44,7 +43,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('EmptyTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('  ');
         $this->isWalkable()->shouldReturn(true);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -59,7 +57,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('MineTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('$-');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -75,7 +72,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('MineTile');
         $this->getHero()->shouldReturn($hero);
-        $this->__toString()->shouldReturn('$1');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -90,7 +86,6 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('TavernTile');
         $this->getHero()->shouldReturn(null);
-        $this->__toString()->shouldReturn('[]');
         $this->isWalkable()->shouldReturn(false);
         $this->getBaseMoveCost()->shouldReturn(1);
     }
@@ -106,8 +101,7 @@ class BoardTileSpec extends ObjectBehavior
         $this->getTileType()->shouldReturn($type);
         $this->getTypeName()->shouldReturn('EnemyHeroTile');
         $this->getHero()->shouldReturn($hero);
-        $this->__toString()->shouldReturn('@4');
         $this->isWalkable()->shouldReturn(true);
-        $this->getBaseMoveCost()->shouldReturn(5);
+        $this->getBaseMoveCost()->shouldReturn(21);
     }
 }

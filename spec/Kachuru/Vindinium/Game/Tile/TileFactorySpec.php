@@ -2,15 +2,15 @@
 
 namespace spec\Kachuru\Vindinium\Game\Tile;
 
-use Kachuru\Vindinium\Game\Tile\BoardTile;
 use Kachuru\Vindinium\Game\Hero\BaseHero;
 use Kachuru\Vindinium\Game\Hero\EnemyHero;
 use Kachuru\Vindinium\Game\Hero\Heroes;
 use Kachuru\Vindinium\Game\Hero\PlayerHero;
 use Kachuru\Vindinium\Game\Position;
+use Kachuru\Vindinium\Game\Tile\BaseBoardTile;
 use Kachuru\Vindinium\Game\Tile\EmptyTile;
-use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\EnemyHeroTile;
+use Kachuru\Vindinium\Game\Tile\MineTile;
 use Kachuru\Vindinium\Game\Tile\PlayerHeroTile;
 use Kachuru\Vindinium\Game\Tile\TavernTile;
 use Kachuru\Vindinium\Game\Tile\TileType;
@@ -26,7 +26,7 @@ class TileFactorySpec extends ObjectBehavior
 {
     function it_returns_the_right_type()
     {
-        $heroes = new Heroes([
+        $heroes = new Heroes(array(
             new PlayerHero(
                 new BaseHero(1, 'PlayerOne', 100, 0, 0, new Position(1, 0))
             ),
@@ -39,7 +39,7 @@ class TileFactorySpec extends ObjectBehavior
             new EnemyHero(
                 new BaseHero(4, 'PlayerOne', 100, 0, 0, new Position(1, 0))
             ),
-        ]);
+        ));
 
         $this->beConstructedWith($heroes);
 
@@ -65,7 +65,7 @@ class TileFactorySpec extends ObjectBehavior
     {
         $position = new Position(1, 1);
         $this->buildTile($content, $position)->shouldBeLike(
-            new BoardTile($position, $type, $player)
+            new BaseBoardTile($position, $type, $player)
         );
     }
 }

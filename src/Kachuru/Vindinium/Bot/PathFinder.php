@@ -64,9 +64,7 @@ class PathFinder
         return array_reduce(
             $tiles,
             function ($boardTiles, BoardTile $boardTile) use ($parentTile) {
-                if ($boardTile->isWalkable()
-                    || $this->isDestination($boardTile)
-                    || $this->isOrigin($boardTile)) {
+                if ($this->boardTileCanBeScored($boardTile)) {
                     $boardTiles[] = $this->pathEndPoints->scoreBoardTile($boardTile, $parentTile);
                 }
                 return $boardTiles;
@@ -123,5 +121,10 @@ class PathFinder
     private function addOrUpdateOpenListPositions($openList, $newList)
     {
         return array_merge($openList, $newList);
+    }
+
+    private function boardTileCanBeScored(BoardTile $boardTile): bool
+    {
+        return $boardTile->isWalkable() || $this->isDestination($boardTile) || $this->isOrigin($boardTile);
     }
 }
